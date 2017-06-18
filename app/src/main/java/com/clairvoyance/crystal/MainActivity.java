@@ -2,6 +2,7 @@ package com.clairvoyance.crystal;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +11,7 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -54,28 +56,61 @@ public class MainActivity extends AppCompatActivity {
     {
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.mainLayout);
 
-        String[] textArray = {"One", "Two", "Three", "Four"};
+        String[] textArray = {"Event One", "Event Two", "Event Three", "Event Four"};
 
         for( int i = 0; i < textArray.length; i++ )
         {
-            TextView textView = new TextView(this);
+            Button eventButton = new Button(this);
 
-            // Formatting the TextView
-
+            // Formatting the TextView - Margins
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
 
             int topValueInPx = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
+            int bottomValueInPx = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
+            bottomValueInPx = bottomValueInPx / 2;
             int leftValueInPx = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
 
-            params.setMargins(leftValueInPx, topValueInPx, leftValueInPx, topValueInPx);
-            textView.setLayoutParams(params);
-            textView.setText(textArray[i]);
+            if (i != 0)
+            {
+                topValueInPx = topValueInPx / 2;
+            }
+
+            params.setMargins(leftValueInPx, topValueInPx, leftValueInPx, bottomValueInPx);
+            eventButton.setLayoutParams(params);
+
+            // Formatting the TextView - Background and Text Color
+            eventButton.setTextColor(Color.parseColor("#FFFFFF"));
+            eventButton.setBackgroundColor(Color.parseColor("#0000FF"));
+
+            // Formatting Font -
+            Context mContext = MainActivity.this;
+            Resources r = mContext.getResources();
+
+            int fontSizeInPx = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 12, r.getDisplayMetrics());
+            eventButton.setTextSize(fontSizeInPx);
+
+            // Formatting Button - Text Alignment
+            int topPaddingAdjustment = 5;
+            int leftPaddingAdjustment = 16;
+            eventButton.setGravity(3);
+            eventButton.setPadding(
+                    eventButton.getPaddingLeft() + leftPaddingAdjustment,
+                    eventButton.getPaddingTop() + topPaddingAdjustment,
+                    eventButton.getPaddingRight() - leftPaddingAdjustment,
+                    eventButton.getPaddingBottom() - topPaddingAdjustment
+            );
+
+
+
 
             // Adding the TextView to the Layout
-            linearLayout.addView(textView);
+            eventButton.setText(textArray[i]);
+            linearLayout.addView(eventButton);
+
+
         }
     }
 
