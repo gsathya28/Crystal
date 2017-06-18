@@ -1,5 +1,6 @@
 package com.clairvoyance.crystal;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,28 +59,22 @@ public class MainActivity extends AppCompatActivity {
         for( int i = 0; i < textArray.length; i++ )
         {
             TextView textView = new TextView(this);
-            textView.setText(textArray[i]);
+
             // Formatting the TextView
-            /*
+
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
             );
 
+            int topValueInPx = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
+            int leftValueInPx = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
 
-            Resources r = mContext.getResources();
-            int topbottomPx = (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP,
-                    R.dimen.activity_vertical_margin,
-                    r.getDisplayMetrics()
-            );
-            params.setMargins(R.dimen.activity_horizontal_margin, R.dimen.activity_vertical_margin, R.dimen.activity_horizontal_margin, R.dimen.activity_vertical_margin);
+            params.setMargins(leftValueInPx, topValueInPx, leftValueInPx, topValueInPx);
+            textView.setLayoutParams(params);
+            textView.setText(textArray[i]);
 
-            textView.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-            textView.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-
-            */
-
+            // Adding the TextView to the Layout
             linearLayout.addView(textView);
         }
     }
