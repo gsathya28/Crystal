@@ -104,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
             );
 
 
-
-
             // Adding the TextView to the Layout
             eventButton.setText(textArray[i]);
             linearLayout.addView(eventButton);
