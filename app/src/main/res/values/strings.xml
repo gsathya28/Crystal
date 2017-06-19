@@ -3,4 +3,5 @@
     <string name="title_agenda">Agenda</string>
     <string name="title_weekly">Weekly</string>
     <string name="title_monthly">Monthly</string>
+    <string name="action_settings">Settings</string>
 </resources>
