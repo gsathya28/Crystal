@@ -1,9 +1,11 @@
 package com.clairvoyance.crystal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.MenuItemCompat;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
+        ScrollView mainScrollView = (ScrollView) findViewById(R.id.mainScroll);
+        // Set Listener for getting y-position
+        // When it has passed a certain y-offset: Call the addBackToTop method
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -61,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.setSelectedItemId(R.id.navigation_agenda);
     }
 
-    private void createAgenda()
-    {
+    private void createAgenda() {
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.mainLayout);
 
         String[] textArray = {"Event One", "Event Two", "Event Three", "Event Four"};
@@ -116,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
             // Adding the TextView to the Layout
             eventButton.setText(textArray[i]);
             linearLayout.addView(eventButton);
-
         }
     }
 
@@ -141,8 +145,8 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_add_event:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                Intent newEventIntent = new Intent(this, NewEvent.class);
+                startActivity(newEventIntent);
                 return true;
 
             case R.id.action_search_event:
@@ -160,6 +164,5 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
 
 }
