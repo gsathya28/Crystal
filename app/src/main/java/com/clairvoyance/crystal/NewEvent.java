@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -17,34 +18,65 @@ import java.util.Locale;
 
 public class NewEvent extends AppCompatActivity {
 
-    TimePickerDialog.OnTimeSetListener startTimeDialogListener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm ss", Locale.US);
-            Date date = new Date();
-            String strDate = timeFormat.format(date);
-            Toast.makeText(getBaseContext(), "You have selected " + strDate, Toast.LENGTH_SHORT).show();
-        }
-    };
+    int startYear;
+    int startMonth;
+    int startDayOfMonth;
+    int startHour;
+    int startMin;
 
-    TimePickerDialog.OnTimeSetListener endTimeDialogListener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    int endYear;
+    int endMonth;
+    int endDayOfMonth;
+    int endHour;
+    int endMin;
 
-        }
-    };
+
+
 
     DatePickerDialog.OnDateSetListener startDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
+            startYear = year;
+            startMonth = month;
+            startDayOfMonth = dayOfMonth;
+            TextView startDateTextView = (TextView) findViewById(R.id.startDate);
+            String startDateText = (startMonth + 1) + "/" + startDayOfMonth + "/" + startYear;
+            startDateTextView.setText(startDateText);
         }
     };
 
     DatePickerDialog.OnDateSetListener endDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            endYear = year;
+            endMonth = month;
+            endDayOfMonth = dayOfMonth;
+            TextView endDateTextView = (TextView) findViewById(R.id.endDate);
+            String endDateText = (endMonth + 1) + "/" + endDayOfMonth + "/" + endYear;
+            endDateTextView.setText(endDateText);
+        }
+    };
 
+    TimePickerDialog.OnTimeSetListener startTimeDialogListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // This runs when the user presses OK in the Dialog box
+            startHour = hourOfDay;
+            startMin = minute;
+            TextView startTimeTextView = (TextView) findViewById(R.id.startTime);
+            String startTimeText = hourOfDay + ":" + minute;
+            startTimeTextView.setText(startTimeText);
+        }
+    };
+
+    TimePickerDialog.OnTimeSetListener endTimeDialogListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            endHour = hourOfDay;
+            endMin = minute;
+            TextView endTimeTextView = (TextView) findViewById(R.id.endTime);
+            String endTimeText = hourOfDay + ":" + minute;
+            endTimeTextView.setText(endTimeText);
         }
     };
 
@@ -89,6 +121,8 @@ public class NewEvent extends AppCompatActivity {
                 new DatePickerDialog(NewEvent.this, endDateDialogListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+
+
 
     }
 
