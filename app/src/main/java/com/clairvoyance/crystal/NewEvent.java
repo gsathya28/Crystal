@@ -10,8 +10,10 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
+
 
 public class NewEvent extends AppCompatActivity {
 
@@ -22,9 +24,6 @@ public class NewEvent extends AppCompatActivity {
     TextView endDateTextView;
     TextView startTimeTextView;
     TextView endTimeTextView;
-
-    SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
     DatePickerDialog.OnDateSetListener startDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -39,7 +38,7 @@ public class NewEvent extends AppCompatActivity {
 
             }
 
-            String startDateText = dateFormat.format(startCalendar.getTime());
+            String startDateText = DateFormat.getDateInstance().format(startCalendar.getTime());
             startDateTextView.setText(startDateText);
         }
     };
@@ -56,7 +55,7 @@ public class NewEvent extends AppCompatActivity {
 
             }
 
-            String endDateText = dateFormat.format(endCalendar.getTime());
+            String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
             endDateTextView.setText(endDateText);
         }
     };
@@ -74,7 +73,7 @@ public class NewEvent extends AppCompatActivity {
 
             }
 
-            String startTimeText = timeFormat.format(startCalendar.getTime());
+            String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
             startTimeTextView.setText(startTimeText);
         }
     };
@@ -91,7 +90,7 @@ public class NewEvent extends AppCompatActivity {
 
             }
 
-            String endTimeText = timeFormat.format(endCalendar.getTime());
+            String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
             endTimeTextView.setText(endTimeText);
         }
     };
@@ -113,13 +112,13 @@ public class NewEvent extends AppCompatActivity {
         endTimeTextView = (TextView) findViewById(R.id.endTime);
 
         // Print it out
-        String startDateText = dateFormat.format(startCalendar.getTime());
+        String startDateText = DateFormat.getDateInstance().format(startCalendar.getTime());
         startDateTextView.setText(startDateText);
-        String endDateText = dateFormat.format(endCalendar.getTime());
+        String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
         endDateTextView.setText(endDateText);
-        String startTimeText = timeFormat.format(startCalendar.getTime());
+        String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
         startTimeTextView.setText(startTimeText);
-        String endTimeText = timeFormat.format(endCalendar.getTime());
+        String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
         endTimeTextView.setText(endTimeText);
 
         // Setting up the Set-Time Dialogs through Click Listeners
