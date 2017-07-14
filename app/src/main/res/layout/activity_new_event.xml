@@ -52,14 +52,14 @@
         android:paddingTop="2dp"
         android:textColor="@color/colorText"
         android:textColorHint="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/addButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/addButton"
         style="@android:style/Widget.Holo.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -9,12 +9,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class NewEvent extends AppCompatActivity {
 
@@ -23,14 +18,22 @@ public class NewEvent extends AppCompatActivity {
     int startDayOfMonth;
     int startHour;
     int startMin;
+    int startDisplayHour;
+    String MeridiemOfStart;
 
     int endYear;
     int endMonth;
     int endDayOfMonth;
     int endHour;
     int endMin;
+    int endDisplayHour;
+    String MeridiemOfEnd;
 
 
+    TextView startDateTextView;
+    TextView endDateTextView;
+    TextView startTimeTextView;
+    TextView endTimeTextView;
 
 
     DatePickerDialog.OnDateSetListener startDateDialogListener = new DatePickerDialog.OnDateSetListener() {
@@ -39,7 +42,7 @@ public class NewEvent extends AppCompatActivity {
             startYear = year;
             startMonth = month;
             startDayOfMonth = dayOfMonth;
-            TextView startDateTextView = (TextView) findViewById(R.id.startDate);
+
             String startDateText = (startMonth + 1) + "/" + startDayOfMonth + "/" + startYear;
             startDateTextView.setText(startDateText);
         }
@@ -51,7 +54,7 @@ public class NewEvent extends AppCompatActivity {
             endYear = year;
             endMonth = month;
             endDayOfMonth = dayOfMonth;
-            TextView endDateTextView = (TextView) findViewById(R.id.endDate);
+
             String endDateText = (endMonth + 1) + "/" + endDayOfMonth + "/" + endYear;
             endDateTextView.setText(endDateText);
         }
@@ -63,8 +66,10 @@ public class NewEvent extends AppCompatActivity {
             // This runs when the user presses OK in the Dialog box
             startHour = hourOfDay;
             startMin = minute;
-            TextView startTimeTextView = (TextView) findViewById(R.id.startTime);
-            String startTimeText = hourOfDay + ":" + minute;
+            startDisplayHour = (startHour == 0) ? 12 : startHour%12;
+            MeridiemOfStart = (startHour >= 12) ? "PM" : "AM";
+
+            String startTimeText = startDisplayHour + ":" + startMin + " " + MeridiemOfStart ;
             startTimeTextView.setText(startTimeText);
         }
     };
@@ -74,8 +79,10 @@ public class NewEvent extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             endHour = hourOfDay;
             endMin = minute;
-            TextView endTimeTextView = (TextView) findViewById(R.id.endTime);
-            String endTimeText = hourOfDay + ":" + minute;
+            endDisplayHour = (endHour == 0) ? 12 : endHour%12;
+            MeridiemOfEnd = (endHour >= 12) ? "PM" : "AM";
+
+            String endTimeText = endDisplayHour + ":" + startMin + " " + MeridiemOfEnd;
             endTimeTextView.setText(endTimeText);
         }
     };
@@ -85,13 +92,48 @@ public class NewEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
 
-        // Setting up the Set-Time Dialogs
+        // Setting up default time stuff
+        Calendar setCal = Calendar.getInstance();
+
+        startYear = setCal.get(Calendar.YEAR);
+        startMonth = setCal.get(Calendar.MONTH);
+        startDayOfMonth = setCal.get(Calendar.DAY_OF_MONTH);
+        startHour = setCal.get(Calendar.HOUR_OF_DAY);
+        startMin = setCal.get(Calendar.MINUTE);
+        startDisplayHour = (startHour == 0) ? 12 : startHour%12;
+
+        endYear = setCal.get(Calendar.YEAR);
+        endMonth = setCal.get(Calendar.MONTH);
+        endDayOfMonth = setCal.get(Calendar.DAY_OF_MONTH);
+        endHour = setCal.get(Calendar.HOUR_OF_DAY) + 1;
+        endMin = setCal.get(Calendar.MINUTE);
+        endDisplayHour = (endHour == 0) ? 12 : endHour%12;
+
+        // Set up Meridiem Stuff
+        MeridiemOfStart = (startHour >= 12) ? "PM" : "AM";
+        MeridiemOfEnd = (endHour >= 12) ? "PM" : "AM";
+
+        // Displaying default time stuff
+        startDateTextView = (TextView) findViewById(R.id.startDate);
+        endDateTextView = (TextView) findViewById(R.id.endDate);
+        startTimeTextView = (TextView) findViewById(R.id.startTime);
+        endTimeTextView = (TextView) findViewById(R.id.endTime);
+
+        String startDateText = (startMonth + 1) + "/" + startDayOfMonth + "/" + startYear;
+        startDateTextView.setText(startDateText);
+        String endDateText = (endMonth + 1) + "/" + endDayOfMonth + "/" + endYear;
+        endDateTextView.setText(endDateText);
+        String startTimeText = startDisplayHour + ":" + startMin + " " + MeridiemOfStart;
+        startTimeTextView.setText(startTimeText);
+        String endTimeText = endDisplayHour + ":" + endMin + " " + MeridiemOfEnd;
+        endTimeTextView.setText(endTimeText);
+
+        // Setting up the Set-Time Dialogs through Click Listeners
         Button startTimeButton = (Button) findViewById(R.id.startTimeSet);
         startTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                new TimePickerDialog(NewEvent.this, startTimeDialogListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false).show();
+                new TimePickerDialog(NewEvent.this, startTimeDialogListener, startHour, startMin, false).show();
             }
         });
 
@@ -99,8 +141,7 @@ public class NewEvent extends AppCompatActivity {
         endTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                new TimePickerDialog(NewEvent.this, endTimeDialogListener, (cal.get(Calendar.HOUR_OF_DAY)) + 1, cal.get(Calendar.MINUTE), false).show();
+                new TimePickerDialog(NewEvent.this, endTimeDialogListener, endHour, endMin, false).show();
             }
         });
 
@@ -108,8 +149,7 @@ public class NewEvent extends AppCompatActivity {
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                new DatePickerDialog(NewEvent.this, startDateDialogListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(NewEvent.this, startDateDialogListener, startYear, startMonth, startDayOfMonth).show();
             }
         });
 
@@ -117,12 +157,18 @@ public class NewEvent extends AppCompatActivity {
         endDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                new DatePickerDialog(NewEvent.this, endDateDialogListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+                new DatePickerDialog(NewEvent.this, endDateDialogListener, endYear, endMonth, endDayOfMonth).show();
             }
         });
 
+        // Time to add another Button Listener.
+        Button addButton = (Button) findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 
     }
 
