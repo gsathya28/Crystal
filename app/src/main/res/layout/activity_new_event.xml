@@ -43,14 +43,15 @@
         android:ems="10"
         android:gravity="top|start"
         android:hint="@string/notes"
+        android:imeOptions="actionDone"
         android:inputType="textPersonName"
         android:lines="3"
-        android:paddingStart="4dp"
         android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingStart="4dp"
         android:paddingTop="2dp"
-        android:textColorHint="@color/colorPrimary"
         android:textColor="@color/colorText"
-        android:imeOptions="actionDone"
+        android:textColorHint="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -206,7 +207,7 @@
                     tools:layout_editor_absoluteY="8dp" />
 
                 <Button
-                    android:id="@+id/button4"
+                    android:id="@+id/startTimeSet"
                     style="@android:style/Widget.Holo.Button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -235,7 +236,7 @@
                     tools:layout_editor_absoluteY="8dp" />
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/endTimeSet"
                     style="@android:style/Widget.Holo.Button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -261,20 +262,22 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/pushNotifNumber"
+                    android:id="@+id/pushNotificationNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="#"
+                    android:hint="@string/pound"
                     android:inputType="number"
+                    android:paddingEnd="2dp"
                     android:paddingLeft="8dp"
+                    android:paddingRight="2dp"
                     android:paddingStart="8dp"
-                    android:textColorHint="@color/colorPrimary"
-                    android:textColor="@color/colorText" />
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorPrimary" />
 
                 <Spinner
-                    android:id="@+id/pushNotifTypes"
+                    android:id="@+id/pushNotificationTypes"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
