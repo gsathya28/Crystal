@@ -148,7 +148,7 @@
                     tools:layout_editor_absoluteY="8dp" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/startDateSet"
                     style="@android:style/Widget.Holo.Button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -166,7 +166,6 @@
                 tools:layout_editor_absoluteY="8dp">
 
                 <TextView
-                    android:id="@+id/textView2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1.73"
@@ -178,7 +177,7 @@
                     tools:layout_editor_absoluteY="8dp" />
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/endDateSet"
                     style="@android:style/Widget.Holo.Button"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
