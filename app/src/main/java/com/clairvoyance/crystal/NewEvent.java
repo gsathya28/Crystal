@@ -9,41 +9,37 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class NewEvent extends AppCompatActivity {
 
-    int startYear;
-    int startMonth;
-    int startDayOfMonth;
-    int startHour;
-    int startMin;
-    int startDisplayHour;
-    String MeridiemOfStart;
-
-    int endYear;
-    int endMonth;
-    int endDayOfMonth;
-    int endHour;
-    int endMin;
-    int endDisplayHour;
-    String MeridiemOfEnd;
-
+    Calendar startCalendar;
+    Calendar endCalendar;
 
     TextView startDateTextView;
     TextView endDateTextView;
     TextView startTimeTextView;
     TextView endTimeTextView;
 
+    SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
     DatePickerDialog.OnDateSetListener startDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            startYear = year;
-            startMonth = month;
-            startDayOfMonth = dayOfMonth;
 
-            String startDateText = (startMonth + 1) + "/" + startDayOfMonth + "/" + startYear;
+            startCalendar.set(Calendar.YEAR, year);
+            startCalendar.set(Calendar.MONTH, month);
+            startCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            if (!startBeforeEnd())
+            {
+
+            }
+
+            String startDateText = dateFormat.format(startCalendar.getTime());
             startDateTextView.setText(startDateText);
         }
     };
@@ -51,11 +47,16 @@ public class NewEvent extends AppCompatActivity {
     DatePickerDialog.OnDateSetListener endDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            endYear = year;
-            endMonth = month;
-            endDayOfMonth = dayOfMonth;
+            endCalendar.set(Calendar.YEAR, year);
+            endCalendar.set(Calendar.MONTH, month);
+            endCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            String endDateText = (endMonth + 1) + "/" + endDayOfMonth + "/" + endYear;
+            if (!startBeforeEnd())
+            {
+
+            }
+
+            String endDateText = dateFormat.format(endCalendar.getTime());
             endDateTextView.setText(endDateText);
         }
     };
@@ -64,12 +65,16 @@ public class NewEvent extends AppCompatActivity {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // This runs when the user presses OK in the Dialog box
-            startHour = hourOfDay;
-            startMin = minute;
-            startDisplayHour = (startHour == 0) ? 12 : startHour%12;
-            MeridiemOfStart = (startHour >= 12) ? "PM" : "AM";
+            startCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            startCalendar.set(Calendar.MINUTE, minute);
 
-            String startTimeText = startDisplayHour + ":" + startMin + " " + MeridiemOfStart ;
+
+            if (!startBeforeEnd())
+            {
+
+            }
+
+            String startTimeText = timeFormat.format(startCalendar.getTime());
             startTimeTextView.setText(startTimeText);
         }
     };
@@ -77,12 +82,16 @@ public class NewEvent extends AppCompatActivity {
     TimePickerDialog.OnTimeSetListener endTimeDialogListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            endHour = hourOfDay;
-            endMin = minute;
-            endDisplayHour = (endHour == 0) ? 12 : endHour%12;
-            MeridiemOfEnd = (endHour >= 12) ? "PM" : "AM";
+            endCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            endCalendar.set(Calendar.MINUTE, minute);
 
-            String endTimeText = endDisplayHour + ":" + startMin + " " + MeridiemOfEnd;
+
+            if (!startBeforeEnd())
+            {
+
+            }
+
+            String endTimeText = timeFormat.format(endCalendar.getTime());
             endTimeTextView.setText(endTimeText);
         }
     };
@@ -93,25 +102,9 @@ public class NewEvent extends AppCompatActivity {
         setContentView(R.layout.activity_new_event);
 
         // Setting up default time stuff
-        Calendar setCal = Calendar.getInstance();
-
-        startYear = setCal.get(Calendar.YEAR);
-        startMonth = setCal.get(Calendar.MONTH);
-        startDayOfMonth = setCal.get(Calendar.DAY_OF_MONTH);
-        startHour = setCal.get(Calendar.HOUR_OF_DAY);
-        startMin = setCal.get(Calendar.MINUTE);
-        startDisplayHour = (startHour == 0) ? 12 : startHour%12;
-
-        endYear = setCal.get(Calendar.YEAR);
-        endMonth = setCal.get(Calendar.MONTH);
-        endDayOfMonth = setCal.get(Calendar.DAY_OF_MONTH);
-        endHour = setCal.get(Calendar.HOUR_OF_DAY) + 1;
-        endMin = setCal.get(Calendar.MINUTE);
-        endDisplayHour = (endHour == 0) ? 12 : endHour%12;
-
-        // Set up Meridiem Stuff
-        MeridiemOfStart = (startHour >= 12) ? "PM" : "AM";
-        MeridiemOfEnd = (endHour >= 12) ? "PM" : "AM";
+        startCalendar = Calendar.getInstance();
+        endCalendar = Calendar.getInstance();
+        endCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
         // Displaying default time stuff
         startDateTextView = (TextView) findViewById(R.id.startDate);
@@ -119,13 +112,14 @@ public class NewEvent extends AppCompatActivity {
         startTimeTextView = (TextView) findViewById(R.id.startTime);
         endTimeTextView = (TextView) findViewById(R.id.endTime);
 
-        String startDateText = (startMonth + 1) + "/" + startDayOfMonth + "/" + startYear;
+        // Print it out
+        String startDateText = dateFormat.format(startCalendar.getTime());
         startDateTextView.setText(startDateText);
-        String endDateText = (endMonth + 1) + "/" + endDayOfMonth + "/" + endYear;
+        String endDateText = dateFormat.format(endCalendar.getTime());
         endDateTextView.setText(endDateText);
-        String startTimeText = startDisplayHour + ":" + startMin + " " + MeridiemOfStart;
+        String startTimeText = timeFormat.format(startCalendar.getTime());
         startTimeTextView.setText(startTimeText);
-        String endTimeText = endDisplayHour + ":" + endMin + " " + MeridiemOfEnd;
+        String endTimeText = timeFormat.format(endCalendar.getTime());
         endTimeTextView.setText(endTimeText);
 
         // Setting up the Set-Time Dialogs through Click Listeners
@@ -133,7 +127,7 @@ public class NewEvent extends AppCompatActivity {
         startTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(NewEvent.this, startTimeDialogListener, startHour, startMin, false).show();
+                new TimePickerDialog(NewEvent.this, startTimeDialogListener, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), false).show();
             }
         });
 
@@ -141,7 +135,7 @@ public class NewEvent extends AppCompatActivity {
         endTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(NewEvent.this, endTimeDialogListener, endHour, endMin, false).show();
+                new TimePickerDialog(NewEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false).show();
             }
         });
 
@@ -149,7 +143,7 @@ public class NewEvent extends AppCompatActivity {
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(NewEvent.this, startDateDialogListener, startYear, startMonth, startDayOfMonth).show();
+                new DatePickerDialog(NewEvent.this, startDateDialogListener, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -157,7 +151,7 @@ public class NewEvent extends AppCompatActivity {
         endDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(NewEvent.this, endDateDialogListener, endYear, endMonth, endDayOfMonth).show();
+                new DatePickerDialog(NewEvent.this, endDateDialogListener, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
@@ -169,7 +163,11 @@ public class NewEvent extends AppCompatActivity {
 
             }
         });
+    }
 
+    protected boolean startBeforeEnd()
+    {
+        return startCalendar.before(endCalendar);
     }
 
 }
