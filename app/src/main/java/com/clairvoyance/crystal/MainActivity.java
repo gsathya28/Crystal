@@ -54,8 +54,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+        setSupportActionBar(myToolbar);
+
 
         ScrollView mainScrollView = (ScrollView) findViewById(R.id.mainScroll);
         // Set Listener for getting y-position

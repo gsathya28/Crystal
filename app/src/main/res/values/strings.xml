@@ -19,4 +19,6 @@
     <string name="notes">Notes</string>
     <string name="notifications">Push Notifications</string>
     <string name="pound">#</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>
