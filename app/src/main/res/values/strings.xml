@@ -21,4 +21,7 @@
     <string name="pound">#</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="multipleDays">Multiple Days</string>
+    <string name="date">Date:</string>
+    <string name="time">Time:</string>
 </resources>

@@ -119,7 +119,7 @@
                     android:id="@+id/reminderCheckBox"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:text="@string/reminder" />
 
                 <CheckBox
@@ -128,6 +128,13 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/all_day" />
+
+                <CheckBox
+                    android:id="@+id/multipleDayCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/multipleDays" />
 
             </LinearLayout>
 
@@ -145,7 +152,7 @@
                     android:gravity="center_vertical|end"
                     android:paddingEnd="8dp"
                     android:paddingStart="8dp"
-                    android:text="@string/start_date"
+                    android:text="@string/date"
                     tools:layout_editor_absoluteX="8dp"
                     tools:layout_editor_absoluteY="8dp" />
 
