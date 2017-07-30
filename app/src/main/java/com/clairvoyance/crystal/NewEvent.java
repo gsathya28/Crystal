@@ -2,7 +2,6 @@ package com.clairvoyance.crystal;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -85,7 +84,6 @@ public class NewEvent extends AppCompatActivity {
             {
                 endCalendar = (Calendar) startCalendar.clone();
                 endCalendar.add(Calendar.HOUR_OF_DAY, 1);
-                getEndBeforeStartAlert("End Date").show();
             }
 
             String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
@@ -131,7 +129,10 @@ public class NewEvent extends AppCompatActivity {
 
             if (!startBeforeEnd())
             {
-                getEndBeforeStartAlert("End Time").show();
+                endCalendar = (Calendar) startCalendar.clone();
+                endCalendar.add(Calendar.HOUR_OF_DAY, +1);
+                AlertDialog endBeforeStart = getEndBeforeStartAlert();
+                endBeforeStart.show();
             }
 
             String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
@@ -152,10 +153,33 @@ public class NewEvent extends AppCompatActivity {
         myToolbar.setTitle("New Event");
         setSupportActionBar(myToolbar);
 
-        // Dialog Setup
-
         // Setting up default time stuff
         startCalendar = Calendar.getInstance();
+
+        // Set the minutes right!
+        int minute = startCalendar.get(Calendar.MINUTE);
+        switch (minute / 15)
+        {
+            case 0:
+                if (minute != 0)
+                    startCalendar.set(Calendar.MINUTE, 15);
+                break;
+            case 1:
+                if (minute != 15)
+                    startCalendar.set(Calendar.MINUTE, 30);
+                break;
+            case 2:
+                if (minute != 30)
+                    startCalendar.set(Calendar.MINUTE, 45);
+                break;
+            case 3:
+                if (minute != 45) {
+                    startCalendar.add(Calendar.HOUR_OF_DAY, 1);
+                    startCalendar.set(Calendar.MINUTE, 0);
+                }
+                break;
+        }
+
         endCalendar = (Calendar) startCalendar.clone();
         endCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
@@ -181,7 +205,7 @@ public class NewEvent extends AppCompatActivity {
         // Extracting all the Buttons
         Button startTimeButton = (Button) findViewById(R.id.startTimeSet);
         Button endTimeButton = (Button) findViewById(R.id.endTimeSet);
-        Button startDateButton = (Button) findViewById(R.id.startDateSet);
+        final Button startDateButton = (Button) findViewById(R.id.startDateSet);
         Button endDateButton = (Button) findViewById(R.id.endDateSet);
 
         // Displaying default time stuff
@@ -198,10 +222,9 @@ public class NewEvent extends AppCompatActivity {
         startTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(NewEvent.this, startTimeDialogListener, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), false).show();
+                new TimePickerDialog(NewEvent.this, R.style.Theme_AppCompat_DayNight_Dialog, startTimeDialogListener, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), false).show();
             }
         });
-
 
         endTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,7 +237,10 @@ public class NewEvent extends AppCompatActivity {
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(NewEvent.this, startDateDialogListener, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                DatePickerDialog startDateSelect = new DatePickerDialog(NewEvent.this, startDateDialogListener, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
+                startDateSelect.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() + 1000);
+                startDateSelect.setTitle("");
+                startDateSelect.show();
             }
         });
 
@@ -222,7 +248,10 @@ public class NewEvent extends AppCompatActivity {
         endDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(NewEvent.this, endDateDialogListener, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                DatePickerDialog endDateSelect = new DatePickerDialog(NewEvent.this, endDateDialogListener, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH));
+                endDateSelect.getDatePicker().setMinDate(startCalendar.getTimeInMillis() + 1000);
+                endDateSelect.setTitle("");
+                endDateSelect.show();
             }
         });
 
@@ -291,24 +320,30 @@ public class NewEvent extends AppCompatActivity {
         });
     }
 
-    AlertDialog getEndBeforeStartAlert(String setType)
+    AlertDialog getEndBeforeStartAlert()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(NewEvent.this);
 
-        builder.setMessage("The " + setType + " you have entered is currently before your start time (" + DateFormat.getDateInstance().format(startCalendar.getTime()) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime()) + ") Do you wish to continue?");
+        builder.setMessage("The time you have entered is before your start time (" + DateFormat.getDateInstance().format(startCalendar.getTime()) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime()) + ").");
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
+                TimePickerDialog endTimeSelect = new TimePickerDialog(NewEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false);
+                String startTimeTitle = getResources().getString(R.string.start_time);
+                if (!multipleDayCheck.isChecked()) {
+                    String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
+                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText);
+                }
+                else {
+                    String startTimeText = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(startCalendar.getTime());
+                    String endDateTitle = getResources().getString(R.string.end_date);
+                    String endDateText = DateFormat.getDateInstance(DateFormat.MEDIUM).format(endCalendar.getTime());
+                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText + "\n" + endDateTitle + "\n" + endDateText);
+                }
+                endTimeSelect.show();
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
 
-            }
-        });
-
-        AlertDialog endBeforeStartDialog = builder.create();
-        return endBeforeStartDialog;
+        return builder.create();
     }
 
     protected boolean startBeforeEnd()
