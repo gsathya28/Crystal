@@ -29,5 +29,7 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-vector-drawable:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'org.mnode.ical4j:ical4j:1.0.5'
+
     testCompile 'junit:junit:4.12'
 }

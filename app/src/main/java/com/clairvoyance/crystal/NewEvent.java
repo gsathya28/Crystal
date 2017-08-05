@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -16,7 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.CheckBox;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Version;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -205,7 +212,7 @@ public class NewEvent extends AppCompatActivity {
         // Extracting all the Buttons
         Button startTimeButton = (Button) findViewById(R.id.startTimeSet);
         Button endTimeButton = (Button) findViewById(R.id.endTimeSet);
-        final Button startDateButton = (Button) findViewById(R.id.startDateSet);
+        Button startDateButton = (Button) findViewById(R.id.startDateSet);
         Button endDateButton = (Button) findViewById(R.id.endDateSet);
 
         // Displaying default time stuff
@@ -315,6 +322,8 @@ public class NewEvent extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
 
             }
         });

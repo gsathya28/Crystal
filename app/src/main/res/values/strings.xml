@@ -24,4 +24,7 @@
     <string name="multipleDays">Multiple Days</string>
     <string name="date">Date:</string>
     <string name="time">Time:</string>
+    <string name="agenda">Agenda</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
 </resources>
