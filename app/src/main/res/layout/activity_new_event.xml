@@ -153,6 +153,7 @@
                     android:paddingEnd="8dp"
                     android:paddingStart="8dp"
                     android:text="@string/date"
+                    android:textSize="16sp"
                     tools:layout_editor_absoluteX="8dp"
                     tools:layout_editor_absoluteY="8dp" />
 
@@ -161,7 +162,8 @@
                     android:layout_width="102dp"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/startDateSet"
@@ -170,6 +172,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1.73"
                     android:text="@string/select"
+                    android:textSize="16sp"
                     tools:layout_editor_absoluteX="0dp"
                     tools:layout_editor_absoluteY="0dp" />
             </LinearLayout>
@@ -189,6 +192,7 @@
                     android:paddingEnd="8dp"
                     android:paddingStart="8dp"
                     android:text="@string/start_time"
+                    android:textSize="16sp"
                     tools:layout_editor_absoluteX="0dp"
                     tools:layout_editor_absoluteY="8dp" />
 
@@ -197,7 +201,8 @@
                     android:layout_width="102dp"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
 
                 <Button
                     android:id="@+id/startTimeSet"
@@ -207,7 +212,8 @@
                     android:layout_weight="1.73"
                     android:text="@string/set"
                     tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="0dp" />
+                    tools:layout_editor_absoluteY="0dp"
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
@@ -229,14 +235,16 @@
                     android:paddingStart="8dp"
                     android:text="@string/end_date"
                     tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="8dp" />
+                    tools:layout_editor_absoluteY="8dp"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/endDate"
                     android:layout_width="102dp"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/endDateSet"
@@ -245,6 +253,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1.73"
                     android:text="@string/select"
+                    android:textSize="16sp"
                     tools:layout_editor_absoluteX="0dp"
                     tools:layout_editor_absoluteY="0dp" />
 
@@ -265,6 +274,7 @@
                     android:paddingEnd="8dp"
                     android:paddingStart="8dp"
                     android:text="@string/end_time"
+                    android:textSize="16sp"
                     tools:layout_editor_absoluteX="0dp"
                     tools:layout_editor_absoluteY="8dp" />
 
@@ -273,7 +283,8 @@
                     android:layout_width="102dp"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/endTimeSet"
@@ -283,7 +294,8 @@
                     android:layout_weight="1.73"
                     android:text="@string/set"
                     tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="0dp" />
+                    tools:layout_editor_absoluteY="0dp"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -294,7 +306,8 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/notifications"
                 android:textAlignment="center"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:id="@+id/pushNotifFirstRow"
@@ -309,6 +322,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/pound"
+                    android:textSize="16sp"
                     android:inputType="number"
                     android:paddingEnd="2dp"
                     android:paddingLeft="8dp"
