@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -18,23 +19,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.CalendarOutputter;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Version;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-    Calendar localCalendar;
+    CrystalCalendar localCalendar;
+    ArrayList<CrystalEvent> eventList;
+    boolean savedCalendarOnFile = false;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -63,28 +55,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Check for local Calendar on Phone
         // Todo: Put this on separate Thread
-        try {
-            FileInputStream fin = new FileInputStream("localCalendar.ics");
-            CalendarBuilder builder = new CalendarBuilder();
-            localCalendar = builder.build(fin);
-        }
-        catch (IOException in) {
-            localCalendar = new net.fortuna.ical4j.model.Calendar();
-            localCalendar.getProperties().add(new ProdId("-//Sathya Govindarajan//iCal4j 2.0.0//EN"));
-            localCalendar.getProperties().add(Version.VERSION_2_0);
-            localCalendar.getProperties().add(CalScale.GREGORIAN);
 
-            try {
-                FileOutputStream fOut = new FileOutputStream("localCalendar.ics");
-                CalendarOutputter outPutter = new CalendarOutputter();
-                outPutter.output(localCalendar, fOut);
-            } catch (IOException|ValidationException out) {
-                Log.d("Save Error: ", out.getMessage());
-            }
-        }
-        catch (ParserException parseErr) {
-            Log.d("Read Error: ", parseErr.getMessage());
-        }
+        // Check for saved calendar
+
+        localCalendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
+        Log.d("Calendar Stats", "Calendar Created not Written");
+        localCalendar = CrystalCalendar.read(this, localCalendar);
+        eventList = localCalendar.getEvents();
+        savedCalendarOnFile = !(eventList.isEmpty());
+        // If there's a saved Calendar
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -100,59 +79,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createAgenda() {
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.mainLayout);
 
-        String[] textArray = {"Event One", "Event Two", "Event Three", "Event Four"};
+        if (savedCalendarOnFile) {
 
-        for( int i = 0; i < textArray.length; i++ )
-        {
-            Button eventButton = new Button(this);
-
-            // Formatting the TextView - Margins
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-
-            int topValueInPx = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
-            int bottomValueInPx = (int) getResources().getDimension(R.dimen.activity_vertical_margin);
-            bottomValueInPx = bottomValueInPx / 2;
-            int leftValueInPx = (int) getResources().getDimension(R.dimen.activity_horizontal_margin);
-
-            if (i != 0)
-            {
-                topValueInPx = topValueInPx / 2;
+            for (CrystalEvent event : eventList ) {
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.mainLayout);
+                Button eventButton = event.generateButton(MainActivity.this);
+                eventButton.setText("1");
+                linearLayout.addView(eventButton);
             }
-
-            params.setMargins(leftValueInPx, topValueInPx, leftValueInPx, bottomValueInPx);
-            eventButton.setLayoutParams(params);
-
-            // Formatting the TextView - Background and Text Color
-            eventButton.setTextColor(Color.parseColor("#FFFFFF"));
-            eventButton.setBackgroundColor(Color.parseColor("#0000FF"));
-
-            // Formatting Font -
-            Context mContext = MainActivity.this;
-            Resources r = mContext.getResources();
-
-            int fontSizeInPx = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 12, r.getDisplayMetrics());
-            eventButton.setTextSize(fontSizeInPx);
-
-            // Formatting Button - Text Alignment
-            int topPaddingAdjustment = 5;
-            int leftPaddingAdjustment = 16;
-            eventButton.setGravity(3);
-            eventButton.setPadding(
-                    eventButton.getPaddingLeft() + leftPaddingAdjustment,
-                    eventButton.getPaddingTop() + topPaddingAdjustment,
-                    eventButton.getPaddingRight() - leftPaddingAdjustment,
-                    eventButton.getPaddingBottom() - topPaddingAdjustment
-            );
-
-
-            // Adding the TextView to the Layout
-            eventButton.setText(textArray[i]);
-            linearLayout.addView(eventButton);
+        }
+        else
+        {
+            // Generate A block of code saying that a new event should be made yo!
+            Log.d("GUI Stats", "No Events!");
         }
     }
 
@@ -172,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.action_add_event:
                 Intent newEventIntent = new Intent(this, NewEvent.class);
+                newEventIntent.putExtra("Local_Calendar", localCalendar);
                 startActivity(newEventIntent);
                 return true;
 
@@ -190,5 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+
 
 }

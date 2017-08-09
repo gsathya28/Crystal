@@ -3,8 +3,11 @@ package com.clairvoyance.crystal;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,13 +20,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.CheckBox;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Version;
 
-import java.io.FileInputStream;
+import net.fortuna.ical4j.data.CalendarOutputter;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.util.SimpleHostInfo;
+import net.fortuna.ical4j.util.UidGenerator;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.SocketException;
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -49,7 +59,10 @@ public class NewEvent extends AppCompatActivity {
     CheckBox allDayCheck;
     CheckBox multipleDayCheck;
 
+    CrystalCalendar localCalendar;
+
     boolean eventInPast;
+    UidGenerator ug;
 
     DatePickerDialog.OnDateSetListener startDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -151,6 +164,9 @@ public class NewEvent extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Setup Local Calendar
+        localCalendar = (CrystalCalendar) getIntent().getSerializableExtra("Local_Calendar");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
 
@@ -316,15 +332,20 @@ public class NewEvent extends AppCompatActivity {
             }
         });
 
-
         // Time to add the Add-Event Button Listener.
         Button addButton = (Button) findViewById(R.id.addButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Todo: Put on separate Thread. - Load Calendar and Insert Event
 
+                CrystalEvent newEvent = new CrystalEvent(startCalendar, endCalendar);
+                localCalendar.add(newEvent);
+                localCalendar.save(NewEvent.this);
 
-
+                Intent localSave = new Intent(getApplicationContext(), MainActivity.class);
+                localSave.putExtra("new_event", newEvent);
+                startActivity(localSave);
             }
         });
     }
