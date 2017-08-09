@@ -3,15 +3,12 @@ package com.clairvoyance.crystal;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -21,19 +18,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.CheckBox;
 
-import net.fortuna.ical4j.data.CalendarOutputter;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.util.SimpleHostInfo;
-import net.fortuna.ical4j.util.UidGenerator;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.SocketException;
 import java.text.DateFormat;
 import java.util.Calendar;
 
@@ -60,9 +44,7 @@ public class NewEvent extends AppCompatActivity {
     CheckBox multipleDayCheck;
 
     CrystalCalendar localCalendar;
-
     boolean eventInPast;
-    UidGenerator ug;
 
     DatePickerDialog.OnDateSetListener startDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
