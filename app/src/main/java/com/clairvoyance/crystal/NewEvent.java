@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -322,6 +323,14 @@ public class NewEvent extends AppCompatActivity {
                 // Todo: Put on separate Thread. - Load Calendar and Insert Event
 
                 CrystalEvent newEvent = new CrystalEvent(startCalendar, endCalendar);
+
+                TextView eventNameTextView = (TextView) findViewById(R.id.eventName);
+                String eventName = eventNameTextView.getText().toString();
+                if (!newEvent.set(CrystalEvent.NAME, eventName))
+                {
+                    Toast.makeText(NewEvent.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+
                 localCalendar.add(newEvent);
                 localCalendar.save(NewEvent.this);
 

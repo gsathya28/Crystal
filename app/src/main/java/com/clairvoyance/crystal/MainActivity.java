@@ -21,8 +21,9 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     CrystalCalendar localCalendar;
-    ArrayList<CrystalEvent> eventList;
+    ArrayList<ArrayList<CrystalEvent>> eventList;
     boolean savedCalendarOnFile = false;
+    boolean isAgendaActive = false;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -75,20 +76,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createAgenda() {
+        if (!isAgendaActive) {
 
-        if (savedCalendarOnFile) {
+            isAgendaActive = true;
+            if (savedCalendarOnFile) {
 
-            for (CrystalEvent event : eventList ) {
-                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.mainLayout);
-                Button eventButton = event.generateButton(MainActivity.this);
-                eventButton.setText("1");
-                linearLayout.addView(eventButton);
+                LinearLayout outerLinearLayout = (LinearLayout) findViewById(R.id.mainLayout);
+                for (ArrayList<CrystalEvent> dateOfEvent : eventList) {
+
+                    LinearLayout innerLinearLayout = localCalendar.generateAgendaLinearLayout(MainActivity.this, dateOfEvent);
+                    outerLinearLayout.addView(innerLinearLayout);
+                }
+            } else {
+                // Generate A block of code saying that a new event should be made yo!
+                Log.d("GUI Stats", "No Events!");
             }
-        }
-        else
-        {
-            // Generate A block of code saying that a new event should be made yo!
-            Log.d("GUI Stats", "No Events!");
         }
     }
 

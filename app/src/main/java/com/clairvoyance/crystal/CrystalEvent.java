@@ -24,13 +24,14 @@ class CrystalEvent implements Serializable {
     private Calendar endTime;
     private boolean isAllday;
     private boolean hasReminders;
-
+    private String name = "Untitled Event";
+    private String notes = "";
 
 
     public final static int ALL_DAY = 0;
     public final static int HAS_REMINDERS = 1;
-    public final static int NAME = 2;
-    public final static int NOTES = 3;
+    final static int NAME = 2;
+    final static int NOTES = 3;
 
 
 
@@ -91,10 +92,9 @@ class CrystalEvent implements Serializable {
 
     }
 
-    protected Calendar[] getTimes()
+    protected Calendar getStartTime()
     {
-        Calendar[] times = {startTime, endTime};
-        return times;
+        return startTime;
     }
 
     // Todo: Will return String[]
@@ -103,13 +103,34 @@ class CrystalEvent implements Serializable {
 
     }
 
-    protected void set(int field, boolean value)
+    boolean set(int field, boolean value)
     {
-
+        return true;
     }
 
-    protected void set(int field, String value)
+    boolean set(int field, String value)
     {
-
+        if(!value.equals("")) {
+            switch (field) {
+                case NAME:
+                    name = value;
+                    return true;
+                case NOTES:
+                    notes = value;
+                    return true;
+            }
+        }
+        return false;
     }
+
+    String get(int field)
+    {
+        switch (field)
+        {
+            case NAME:
+                return name;
+        }
+        return "";
+    }
+
 }
