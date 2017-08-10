@@ -262,6 +262,9 @@ public class NewEvent extends AppCompatActivity {
         });
 
         // Reminder Checkbox Listener
+        /* Todo: Make sure all the calendars are modified when the checkboxes are checked/unchecked
+            Not just the textViews
+        */
         reminderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

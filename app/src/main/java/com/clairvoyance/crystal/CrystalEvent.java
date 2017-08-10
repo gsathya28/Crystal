@@ -69,7 +69,6 @@ class CrystalEvent implements Serializable {
 
         // Formatting Font -
         Resources r = context.getResources();
-
         int fontSizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, r.getDisplayMetrics());
         eventButton.setTextSize(fontSizeInPx);
 

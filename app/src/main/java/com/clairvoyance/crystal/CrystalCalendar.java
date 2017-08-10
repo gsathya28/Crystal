@@ -1,7 +1,10 @@
 package com.clairvoyance.crystal;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -121,14 +124,26 @@ class CrystalCalendar implements Serializable{
         Calendar startCalendar = dateOfEvent.get(0).getStartTime();
         String dateText = DateFormat.getDateInstance(DateFormat.SHORT).format(startCalendar.getTime());
         dateTextView.setText(dateText);
+
+        int topValueInPx = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
+        int bottomValueInPx = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
+        bottomValueInPx = bottomValueInPx / 2;
+        int leftValueInPx = (int) context.getResources().getDimension(R.dimen.activity_horizontal_margin);
+
+        layoutParams.setMargins(leftValueInPx, topValueInPx, leftValueInPx, bottomValueInPx);
         dateTextView.setLayoutParams(layoutParams);
+
+        Resources r = context.getResources();
+        int fontSizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, r.getDisplayMetrics());
+        dateTextView.setTextSize(fontSizeInPx);
+        dateTextView.setTypeface(null, Typeface.BOLD);
 
         innerLinearLayout.addView(dateTextView);
 
         for (CrystalEvent event : dateOfEvent)
         {
             Button eventButton = event.generateButton(context);
-            eventButton.setText("1");
+            eventButton.setText(event.get(CrystalEvent.NAME));
             innerLinearLayout.addView(eventButton);
         }
 
