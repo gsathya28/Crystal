@@ -1,14 +1,17 @@
 package com.clairvoyance.crystal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.Calendar;
 
 /**
@@ -25,10 +28,12 @@ class CrystalEvent implements Serializable {
     private String name = "Untitled Event";
     private String notes = "";
 
-    public final static int ALL_DAY = 0;
-    public final static int HAS_REMINDERS = 1;
+    final static int ALL_DAY = 0;
+    final static int HAS_REMINDERS = 1;
     final static int NAME = 2;
     final static int NOTES = 3;
+    final static int START_TIME = 4;
+    final static int END_TIME = 5;
 
     CrystalEvent(Calendar inStartTime, Calendar inEndTime)
     {
@@ -36,7 +41,7 @@ class CrystalEvent implements Serializable {
         endTime = inEndTime;
     }
 
-    Button generateButton(Context context)
+    Button generateButton(final Context context)
     {
         Button eventButton = new Button(context);
 
@@ -78,6 +83,17 @@ class CrystalEvent implements Serializable {
                 eventButton.getPaddingBottom() - topPaddingAdjustment
         );
 
+        final CrystalEvent buttonEvent = this;
+
+        eventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewEventIntent = new Intent(context, ViewEvent.class);
+                viewEventIntent.putExtra("Event", buttonEvent);
+                context.startActivity(viewEventIntent);
+            }
+        });
+
         return eventButton;
     }
 
@@ -91,10 +107,24 @@ class CrystalEvent implements Serializable {
         return startTime;
     }
 
-    // Todo: Will return String[]
-    protected void displayTimeString()
+    protected String displayTimeString(int field)
     {
+        String finalString;
+        switch (field) {
+            case START_TIME:
+                String startDateText = DateFormat.getDateInstance().format(startTime.getTime());
+                String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startTime.getTime());
 
+                finalString = startTimeText + "\n" + startDateText;
+                return finalString;
+            case END_TIME:
+                String endDateText = DateFormat.getDateInstance().format(endTime.getTime());
+                String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endTime.getTime());
+
+                finalString = endTimeText + "\n" + endDateText;
+                return finalString;
+        }
+        return "";
     }
 
     boolean set(int field, boolean value)
