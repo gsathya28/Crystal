@@ -24,7 +24,7 @@ public class ViewEvent extends AppCompatActivity {
         // Toolbar Setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar2);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        myToolbar.setTitle("New Event");
+        myToolbar.setTitle(event.get(CrystalEvent.NAME));
         setSupportActionBar(myToolbar);
 
         // Get a support ActionBar corresponding to this toolbar

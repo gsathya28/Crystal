@@ -217,6 +217,13 @@ public class NewEvent extends AppCompatActivity {
         endDateRow = (LinearLayout) findViewById(R.id.endDateRow);
         endTimeRow = (LinearLayout) findViewById(R.id.endTimeRow);
 
+        Calendar checkCalendar = Calendar.getInstance();
+        checkCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        if (startCalendar.get(Calendar.HOUR_OF_DAY) == checkCalendar.get(Calendar.HOUR_OF_DAY))
+        {
+            multipleDayCheck.setChecked(true);
+        }
+
         endDateRow.setVisibility(View.GONE);
 
         // Extracting all the Buttons
@@ -319,6 +326,8 @@ public class NewEvent extends AppCompatActivity {
                 {
                     startDateTitleView.setText(R.string.date);
                     endDateRow.setVisibility(View.GONE);
+                    endCalendar = (Calendar) startCalendar.clone();
+                    endCalendar.add(Calendar.HOUR_OF_DAY, 1);
                 }
             }
         });

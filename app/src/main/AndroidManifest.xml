@@ -30,9 +30,16 @@
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.myfirstapp.MainActivity" />
+                android:value="com.clairvoyance.crystal.MainActivity" />
         </activity>
-        <activity android:name=".ViewEvent"></activity>
+        <activity
+            android:name=".ViewEvent"
+            android:parentActivityName=".MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.clairvoyance.crystal.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
