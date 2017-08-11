@@ -75,11 +75,18 @@ class CrystalCalendar implements Serializable{
 
         boolean foundDate = false;
         Calendar startCalendar = event.getStartTime();
+        Calendar strippedStartCalendar = (Calendar) startCalendar.clone();
+        strippedStartCalendar.set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DATE), 0, 0, 0);
+        strippedStartCalendar.set(Calendar.MILLISECOND, 0);
 
         for (ArrayList<CrystalEvent> dateList : crystalEvents)
         {
             Calendar date = dateList.get(0).getStartTime();
-            if (date.get(Calendar.DATE) == startCalendar.get(Calendar.DATE))
+            Calendar strippedDate = (Calendar) date.clone();
+            strippedDate.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE), 0, 0, 0);
+            strippedDate.set(Calendar.MILLISECOND, 0);
+
+            if (strippedStartCalendar.equals(strippedDate))
             {
                 for (CrystalEvent dateEvent : dateList)
                 {
@@ -97,15 +104,20 @@ class CrystalCalendar implements Serializable{
         if (!foundDate) {
             ArrayList<CrystalEvent> newDateList = new ArrayList<>();
             newDateList.add(event);
+
             for (ArrayList<CrystalEvent> dateList : crystalEvents) {
-                if (dateList.get(0).getStartTime().get(Calendar.DATE) > startCalendar.get(Calendar.DATE)) {
+                Calendar date = dateList.get(0).getStartTime();
+                Calendar strippedDate = (Calendar) date.clone();
+                strippedDate.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE), 0, 0, 0);
+                strippedDate.set(Calendar.MILLISECOND, 0);
+
+                if (strippedDate.equals(strippedStartCalendar)) {
                     crystalEvents.add(crystalEvents.indexOf(dateList), newDateList);
                     return;
                 }
             }
             crystalEvents.add(newDateList);
         }
-
     }
 
     ArrayList<ArrayList<CrystalEvent>> getEvents()

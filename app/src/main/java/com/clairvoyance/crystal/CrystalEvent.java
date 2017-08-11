@@ -18,22 +18,17 @@ import java.util.Calendar;
 
 class CrystalEvent implements Serializable {
 
-
-
     private Calendar startTime;
     private Calendar endTime;
-    private boolean isAllday;
+    private boolean isAllday = false;
     private boolean hasReminders;
     private String name = "Untitled Event";
     private String notes = "";
-
 
     public final static int ALL_DAY = 0;
     public final static int HAS_REMINDERS = 1;
     final static int NAME = 2;
     final static int NOTES = 3;
-
-
 
     CrystalEvent(Calendar inStartTime, Calendar inEndTime)
     {
@@ -104,7 +99,14 @@ class CrystalEvent implements Serializable {
 
     boolean set(int field, boolean value)
     {
-        return true;
+        switch (field)
+        {
+            case ALL_DAY:
+                isAllday = value;
+                return true;
+        }
+
+        return false;
     }
 
     boolean set(int field, String value)

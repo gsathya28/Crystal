@@ -6,9 +6,11 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -159,6 +161,15 @@ public class NewEvent extends AppCompatActivity {
         myToolbar.setTitle("New Event");
         setSupportActionBar(myToolbar);
 
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+
+        // Enable the Up button
+        try {
+            ab.setDisplayHomeAsUpEnabled(true);
+        } catch (NullPointerException ne) {
+            Log.d("Action Bar", ne.getMessage());
+        }
         // Setting up default time stuff
         startCalendar = Calendar.getInstance();
 
@@ -250,7 +261,6 @@ public class NewEvent extends AppCompatActivity {
             }
         });
 
-
         endDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,16 +278,14 @@ public class NewEvent extends AppCompatActivity {
         reminderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                {
+                if(isChecked) {
                     allDayCheck.setChecked(false);
                     multipleDayCheck.setChecked(false);
                     endTimeRow.setVisibility(View.GONE);
                     startTimeTitleView.setText(R.string.time);
                     startTimeRow.setVisibility(View.VISIBLE);
                 }
-                else
-                {
+                else {
                     endTimeRow.setVisibility(View.VISIBLE);
                     startTimeTitleView.setText(R.string.start_time);
                 }
@@ -286,17 +294,14 @@ public class NewEvent extends AppCompatActivity {
         allDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                {
+                if(isChecked) {
                     reminderCheck.setChecked(false);
                     startTimeRow.setVisibility(View.GONE);
                     endTimeRow.setVisibility(View.GONE);
                 }
-                else
-                {
+                else {
                     startTimeRow.setVisibility(View.VISIBLE);
                     endTimeRow.setVisibility(View.VISIBLE);
-
                 }
             }
         });
@@ -333,6 +338,8 @@ public class NewEvent extends AppCompatActivity {
                 {
                     Toast.makeText(NewEvent.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
+
+                newEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
 
                 localCalendar.add(newEvent);
                 localCalendar.save(NewEvent.this);
