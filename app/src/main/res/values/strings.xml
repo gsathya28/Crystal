@@ -17,7 +17,7 @@
     <string name="reminder">Reminder</string>
     <string name="all_day">All-Day</string>
     <string name="notes">Notes</string>
-    <string name="notifications">Push Notifications</string>
+    <string name="notifications">Notifications</string>
     <string name="pound">#</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
@@ -27,7 +27,16 @@
     <string name="agenda">Agenda</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
+    <string name="add_notif">Add Notif</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="timeMeasureOptions">
+        <item>minutes</item>
+        <item>hours</item>
+        <item>days</item>
+        <item>weeks</item>
+    </string-array>
+
+
 </resources>

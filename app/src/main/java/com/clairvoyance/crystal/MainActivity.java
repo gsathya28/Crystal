@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_date_select:
-
                 return true;
 
             default:

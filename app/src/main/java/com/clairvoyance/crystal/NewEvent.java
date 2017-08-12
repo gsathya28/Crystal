@@ -12,10 +12,12 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.CheckBox;
@@ -45,6 +47,7 @@ public class NewEvent extends AppCompatActivity {
     CheckBox reminderCheck;
     CheckBox allDayCheck;
     CheckBox multipleDayCheck;
+    Spinner pushNotifTimeTypeSpinner;
 
     CrystalCalendar localCalendar;
     boolean eventInPast;
@@ -217,6 +220,11 @@ public class NewEvent extends AppCompatActivity {
         endDateRow = (LinearLayout) findViewById(R.id.endDateRow);
         endTimeRow = (LinearLayout) findViewById(R.id.endTimeRow);
 
+        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.pushNotificationTypes);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pushNotifTimeTypeSpinner.setAdapter(adapter);
+
         Calendar checkCalendar = Calendar.getInstance();
         checkCalendar.set(Calendar.HOUR_OF_DAY, 23);
         if (startCalendar.get(Calendar.HOUR_OF_DAY) == checkCalendar.get(Calendar.HOUR_OF_DAY))
@@ -328,6 +336,11 @@ public class NewEvent extends AppCompatActivity {
                     endDateRow.setVisibility(View.GONE);
                     endCalendar = (Calendar) startCalendar.clone();
                     endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+
+                    String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
+                    endDateTextView.setText(endDateText);
+                    String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
+                    endTimeTextView.setText(endTimeText);
                 }
             }
         });
@@ -390,5 +403,4 @@ public class NewEvent extends AppCompatActivity {
     {
         return startCalendar.before(endCalendar);
     }
-
 }
