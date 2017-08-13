@@ -18,7 +18,7 @@
     <string name="all_day">All-Day</string>
     <string name="notes">Notes</string>
     <string name="notifications">Notifications</string>
-    <string name="pound">#</string>
+    <string name="pound"># of</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="multipleDays">Multiple Days</string>

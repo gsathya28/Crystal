@@ -3,19 +3,26 @@ package com.clairvoyance.crystal;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -51,6 +58,7 @@ public class NewEvent extends AppCompatActivity {
 
     CrystalCalendar localCalendar;
     boolean eventInPast;
+
 
     DatePickerDialog.OnDateSetListener startDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -346,8 +354,8 @@ public class NewEvent extends AppCompatActivity {
         });
 
         // Time to add the Add-Event Button Listener.
-        Button addButton = (Button) findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        Button addEventButton = (Button) findViewById(R.id.addButton);
+        addEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Todo: Put on separate Thread. - Load Calendar and Insert Event
@@ -369,6 +377,62 @@ public class NewEvent extends AppCompatActivity {
                 Intent localSave = new Intent(getApplicationContext(), MainActivity.class);
                 localSave.putExtra("new_event", newEvent);
                 startActivity(localSave);
+            }
+        });
+
+        Button addNotifButton = (Button) findViewById(R.id.add_notif);
+        addNotifButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainNewLayout);
+
+                final LinearLayout newNotifRow = new LinearLayout(NewEvent.this);
+                newNotifRow.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                newNotifRow.setLayoutParams(layoutParams);
+
+                EditText notifNumber = new EditText(NewEvent.this);
+                Spinner notifTypes = new Spinner(NewEvent.this);
+                Button deleteOption = new Button(NewEvent.this);
+
+                newNotifRow.addView(notifNumber);
+                newNotifRow.addView(notifTypes);
+                newNotifRow.addView(deleteOption);
+                mainLayout.addView(newNotifRow, mainLayout.getChildCount() - 1);
+
+                // NotifNumber Formatting
+                int leftValueInPx = (int) (getResources().getDimension(R.dimen.activity_vertical_margin) / 2.);
+                LinearLayout.LayoutParams notifNumberLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2);
+                notifNumberLayout.setMargins(leftValueInPx, 0, 0, 0);
+                notifNumber.setLayoutParams(notifNumberLayout);
+
+                notifNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+                notifNumber.setPadding(notifNumber.getPaddingLeft(), 0, notifNumber.getPaddingRight(), 0);
+                notifNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
+                notifNumber.setGravity(Gravity.CENTER);
+                notifNumber.setBackgroundResource(R.drawable.border_black);
+
+                // NotifType Formatting + Data
+                LinearLayout.LayoutParams notifTypeLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+                notifTypes.setLayoutParams(notifTypeLayout);
+
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(NewEvent.this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                notifTypes.setAdapter(adapter);
+
+                // Delete Button Formatting + Listener
+                deleteOption.setText("Del");
+                deleteOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mainLayout.removeView(newNotifRow);
+                    }
+                });
+
+
+
+
+
             }
         });
     }
@@ -403,4 +467,5 @@ public class NewEvent extends AppCompatActivity {
     {
         return startCalendar.before(endCalendar);
     }
+
 }
