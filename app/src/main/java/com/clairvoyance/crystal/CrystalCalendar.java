@@ -17,6 +17,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 
 /**
  * Created by Sathya on 8/9/2017.
@@ -27,6 +28,7 @@ class CrystalCalendar implements Serializable{
 
     private String userid;
     private ArrayList<ArrayList<CrystalEvent>> crystalEvents = new ArrayList<>();
+    int eventCount = 0;
 
     CrystalCalendar(String id)
     {
@@ -65,15 +67,99 @@ class CrystalCalendar implements Serializable{
     {
         // Todo: Add based on start Date - for check
 
+        // If empty, just add the event in a new date group
         if (crystalEvents.isEmpty())
         {
             ArrayList<CrystalEvent> newDateList = new ArrayList<>();
             newDateList.add(event);
             crystalEvents.add(newDateList);
+            eventCount++;
             return;
         }
 
-        boolean foundDate = false;
+        // Strip the calendars to only take the date into account
+        Calendar startCalendar = event.getStartTime();
+        Calendar strippedStartCalendar = (Calendar) startCalendar.clone();
+        strippedStartCalendar.set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DATE), 0, 0, 0);
+        strippedStartCalendar.set(Calendar.MILLISECOND, 0);
+
+        // Find the date group we need.
+        ArrayList<CrystalEvent> realDateList = findDate(event);
+        // If the date group is found:
+        if (realDateList != null)
+        {
+            for (CrystalEvent dateEvent : realDateList)
+            {
+                if (dateEvent.getStartTime().getTimeInMillis() >= startCalendar.getTimeInMillis())
+                {
+                    realDateList.add(realDateList.indexOf(dateEvent), event);
+                    eventCount++;
+                    return;
+                }
+            }
+            realDateList.add(event);
+            eventCount++;
+        }
+        else { // If it isn't found
+            ArrayList<CrystalEvent> newDateList = new ArrayList<>();
+            newDateList.add(event);
+
+            for (ArrayList<CrystalEvent> dateList : crystalEvents) {
+                Calendar date = dateList.get(0).getStartTime();
+                Calendar strippedDate = (Calendar) date.clone();
+                strippedDate.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE), 0, 0, 0);
+                strippedDate.set(Calendar.MILLISECOND, 0);
+
+                if (strippedStartCalendar.before(strippedDate)) {
+
+                    crystalEvents.add(crystalEvents.indexOf(dateList), newDateList);
+                    eventCount++;
+                    return;
+                }
+            }
+            crystalEvents.add(newDateList);
+            eventCount++;
+        }
+    }
+
+    boolean remove(CrystalEvent event)
+    {
+        ArrayList<CrystalEvent> dateList = findDate(event);
+        if (dateList != null) {
+
+            int index = crystalEvents.indexOf(dateList);
+            crystalEvents.remove(dateList);
+            Iterator<CrystalEvent> i = dateList.iterator();
+
+            while (i.hasNext())
+            {
+                CrystalEvent eventCheck = i.next();
+                if(eventCheck.get(CrystalEvent.ID).equals(event.get(CrystalEvent.ID)))
+                {
+                    i.remove();
+                }
+            }
+
+            if (dateList.isEmpty())
+            {
+                return true;
+            }
+
+            if (index >= crystalEvents.size())
+            {
+                crystalEvents.add(dateList);
+            }
+            else
+            {
+                crystalEvents.add(index, dateList);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private ArrayList<CrystalEvent> findDate(CrystalEvent event)
+    {
         Calendar startCalendar = event.getStartTime();
         Calendar strippedStartCalendar = (Calendar) startCalendar.clone();
         strippedStartCalendar.set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DATE), 0, 0, 0);
@@ -88,36 +174,11 @@ class CrystalCalendar implements Serializable{
 
             if (strippedStartCalendar.equals(strippedDate))
             {
-                for (CrystalEvent dateEvent : dateList)
-                {
-                    if (dateEvent.getStartTime().getTimeInMillis() >= startCalendar.getTimeInMillis())
-                    {
-                        dateList.add(dateList.indexOf(dateEvent), event);
-                        return;
-                    }
-                }
-                dateList.add(event);
-                foundDate = true;
+                return dateList;
             }
         }
 
-        if (!foundDate) {
-            ArrayList<CrystalEvent> newDateList = new ArrayList<>();
-            newDateList.add(event);
-
-            for (ArrayList<CrystalEvent> dateList : crystalEvents) {
-                Calendar date = dateList.get(0).getStartTime();
-                Calendar strippedDate = (Calendar) date.clone();
-                strippedDate.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE), 0, 0, 0);
-                strippedDate.set(Calendar.MILLISECOND, 0);
-
-                if (strippedDate.equals(strippedStartCalendar)) {
-                    crystalEvents.add(crystalEvents.indexOf(dateList), newDateList);
-                    return;
-                }
-            }
-            crystalEvents.add(newDateList);
-        }
+        return null;
     }
 
     ArrayList<ArrayList<CrystalEvent>> getEvents()
@@ -162,5 +223,4 @@ class CrystalCalendar implements Serializable{
         return innerLinearLayout;
 
     }
-
 }

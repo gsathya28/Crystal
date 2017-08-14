@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ class CrystalEvent implements Serializable {
     private boolean hasReminders;
     private String name = "Untitled Event";
     private String notes = "";
+    private String id;
 
     final static int ALL_DAY = 0;
     final static int HAS_REMINDERS = 1;
@@ -34,11 +36,13 @@ class CrystalEvent implements Serializable {
     final static int NOTES = 3;
     final static int START_TIME = 4;
     final static int END_TIME = 5;
+    final static int ID = 6;
 
-    CrystalEvent(Calendar inStartTime, Calendar inEndTime)
+    CrystalEvent(Calendar inStartTime, Calendar inEndTime, CrystalCalendar localCalendar)
     {
         startTime = inStartTime;
         endTime = inEndTime;
+        id = Build.HOST + (localCalendar.eventCount + 1);
     }
 
     Button generateButton(final Context context)
@@ -107,6 +111,8 @@ class CrystalEvent implements Serializable {
         return startTime;
     }
 
+    protected Calendar getEndTime() { return endTime; }
+
     protected String displayTimeString(int field)
     {
         String finalString;
@@ -160,6 +166,8 @@ class CrystalEvent implements Serializable {
         {
             case NAME:
                 return name;
+            case ID:
+                return id;
         }
         return "";
     }

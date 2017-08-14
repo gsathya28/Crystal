@@ -28,6 +28,10 @@
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
     <string name="add_notif">Add Notif</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="push">Push</string>
+    <string name="save_event">Save Event</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

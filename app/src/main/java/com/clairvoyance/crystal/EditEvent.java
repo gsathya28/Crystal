@@ -3,11 +3,10 @@ package com.clairvoyance.crystal;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,14 +27,13 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-
-public class NewEvent extends AppCompatActivity {
+public class EditEvent extends AppCompatActivity {
 
     Calendar startCalendar;
     Calendar endCalendar;
@@ -57,6 +56,7 @@ public class NewEvent extends AppCompatActivity {
     Spinner pushNotifTimeTypeSpinner;
 
     CrystalCalendar localCalendar;
+    CrystalEvent eventEdited;
     boolean eventInPast;
 
 
@@ -161,15 +161,21 @@ public class NewEvent extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Setup Local Calendar
-        localCalendar = (CrystalCalendar) getIntent().getSerializableExtra("Local_Calendar");
+        // Todo: send localCalendar through Intents
+        localCalendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
+        Log.d("Calendar Stats", "Calendar Created not Written");
+        localCalendar = CrystalCalendar.read(this, localCalendar);
+
+        eventEdited = (CrystalEvent) getIntent().getSerializableExtra("Event");
+
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_event);
+        setContentView(R.layout.activity_edit_event);
 
         // Toolbar Setup
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.editToolbar);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        myToolbar.setTitle("New Event");
+        myToolbar.setTitle(eventEdited.get(CrystalEvent.NAME));
         setSupportActionBar(myToolbar);
 
         // Get a support ActionBar corresponding to this toolbar
@@ -182,53 +188,29 @@ public class NewEvent extends AppCompatActivity {
             Log.d("Action Bar", ne.getMessage());
         }
         // Setting up default time stuff
-        startCalendar = Calendar.getInstance();
 
-        // Set the minutes right!
-        int minute = startCalendar.get(Calendar.MINUTE);
-        switch (minute / 15)
-        {
-            case 0:
-                if (minute != 0)
-                    startCalendar.set(Calendar.MINUTE, 15);
-                break;
-            case 1:
-                if (minute != 15)
-                    startCalendar.set(Calendar.MINUTE, 30);
-                break;
-            case 2:
-                if (minute != 30)
-                    startCalendar.set(Calendar.MINUTE, 45);
-                break;
-            case 3:
-                if (minute != 45) {
-                    startCalendar.add(Calendar.HOUR_OF_DAY, 1);
-                    startCalendar.set(Calendar.MINUTE, 0);
-                }
-                break;
-        }
 
-        endCalendar = (Calendar) startCalendar.clone();
-        endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+        startCalendar = eventEdited.getStartTime();
+        endCalendar = eventEdited.getEndTime();
 
         // Extracting all the views
-        startDateTextView = (TextView) findViewById(R.id.startDate);
-        endDateTextView = (TextView) findViewById(R.id.endDate);
-        startTimeTextView = (TextView) findViewById(R.id.startTime);
-        endTimeTextView = (TextView) findViewById(R.id.endTime);
-        startDateTitleView = (TextView) findViewById(R.id.startDateTitle);
-        startTimeTitleView = (TextView) findViewById(R.id.startTimeTitle);
-        endDateTitleView = (TextView) findViewById(R.id.endDateTitle);
-        endTimeTitleView = (TextView) findViewById(R.id.endTimeTitle);
-        reminderCheck = (CheckBox) findViewById(R.id.reminderCheckBox);
-        allDayCheck = (CheckBox) findViewById(R.id.allDayCheckBox);
-        multipleDayCheck = (CheckBox) findViewById(R.id.multipleDayCheckBox);
-        startDateRow = (LinearLayout) findViewById(R.id.startDateRow);
-        startTimeRow = (LinearLayout) findViewById(R.id.startTimeRow);
-        endDateRow = (LinearLayout) findViewById(R.id.endDateRow);
-        endTimeRow = (LinearLayout) findViewById(R.id.endTimeRow);
+        startDateTextView = (TextView) findViewById(R.id.editStartDate);
+        endDateTextView = (TextView) findViewById(R.id.editEndDate);
+        startTimeTextView = (TextView) findViewById(R.id.editStartTime);
+        endTimeTextView = (TextView) findViewById(R.id.editEndTime);
+        startDateTitleView = (TextView) findViewById(R.id.editStartDateTitle);
+        startTimeTitleView = (TextView) findViewById(R.id.editStartTimeTitle);
+        endDateTitleView = (TextView) findViewById(R.id.editEndDateTitle);
+        endTimeTitleView = (TextView) findViewById(R.id.editEndTimeTitle);
+        reminderCheck = (CheckBox) findViewById(R.id.editReminderCheckBox);
+        allDayCheck = (CheckBox) findViewById(R.id.editAllDayCheckBox);
+        multipleDayCheck = (CheckBox) findViewById(R.id.editMultipleDayCheckBox);
+        startDateRow = (LinearLayout) findViewById(R.id.editStartDateRow);
+        startTimeRow = (LinearLayout) findViewById(R.id.editStartTimeRow);
+        endDateRow = (LinearLayout) findViewById(R.id.editEndDateRow);
+        endTimeRow = (LinearLayout) findViewById(R.id.editEndTimeRow);
 
-        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.pushNotificationTypes);
+        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.editPushNotificationTypes);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pushNotifTimeTypeSpinner.setAdapter(adapter);
@@ -243,10 +225,10 @@ public class NewEvent extends AppCompatActivity {
         endDateRow.setVisibility(View.GONE);
 
         // Extracting all the Buttons
-        Button startTimeButton = (Button) findViewById(R.id.startTimeSet);
-        Button endTimeButton = (Button) findViewById(R.id.endTimeSet);
-        Button startDateButton = (Button) findViewById(R.id.startDateSet);
-        Button endDateButton = (Button) findViewById(R.id.endDateSet);
+        Button startTimeButton = (Button) findViewById(R.id.editStartTimeSet);
+        Button endTimeButton = (Button) findViewById(R.id.editEndTimeSet);
+        Button startDateButton = (Button) findViewById(R.id.editStartDateSet);
+        Button endDateButton = (Button) findViewById(R.id.editEndDateSet);
 
         // Displaying default time stuff
         String startDateText = DateFormat.getDateInstance().format(startCalendar.getTime());
@@ -262,32 +244,32 @@ public class NewEvent extends AppCompatActivity {
         startTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(NewEvent.this, R.style.Theme_AppCompat_DayNight_Dialog, startTimeDialogListener, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), false).show();
+                new TimePickerDialog(EditEvent.this, R.style.Theme_AppCompat_DayNight_Dialog, startTimeDialogListener, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), false).show();
             }
         });
 
         endTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(NewEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false).show();
+                new TimePickerDialog(EditEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false).show();
             }
         });
-
 
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog startDateSelect = new DatePickerDialog(NewEvent.this, startDateDialogListener, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
+                DatePickerDialog startDateSelect = new DatePickerDialog(EditEvent.this, startDateDialogListener, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
                 startDateSelect.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() + 1000);
                 startDateSelect.setTitle("");
                 startDateSelect.show();
             }
         });
 
+
         endDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog endDateSelect = new DatePickerDialog(NewEvent.this, endDateDialogListener, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH));
+                DatePickerDialog endDateSelect = new DatePickerDialog(EditEvent.this, endDateDialogListener, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH));
                 endDateSelect.getDatePicker().setMinDate(startCalendar.getTimeInMillis() + 1000);
                 endDateSelect.setTitle("");
                 endDateSelect.show();
@@ -354,46 +336,52 @@ public class NewEvent extends AppCompatActivity {
         });
 
         // Time to add the Add-Event Button Listener.
-        Button addEventButton = (Button) findViewById(R.id.addButton);
-        addEventButton.setOnClickListener(new View.OnClickListener() {
+        Button editEventButton = (Button) findViewById(R.id.editSaveButton);
+        editEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Todo: Put on separate Thread. - Load Calendar and Insert Event
 
-                CrystalEvent newEvent = new CrystalEvent(startCalendar, endCalendar, localCalendar);
-
-                TextView eventNameTextView = (TextView) findViewById(R.id.eventName);
-                String eventName = eventNameTextView.getText().toString();
-                if (!newEvent.set(CrystalEvent.NAME, eventName))
-                {
-                    Toast.makeText(NewEvent.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                if (!localCalendar.remove(eventEdited)){
+                    Log.d("remove", "Remove error!");
                 }
 
-                newEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
+                localCalendar.save(EditEvent.this);
 
-                localCalendar.add(newEvent);
-                localCalendar.save(NewEvent.this);
+                CrystalEvent EditEvent = new CrystalEvent(startCalendar, endCalendar, localCalendar);
 
-                Intent localSave = new Intent(getApplicationContext(), MainActivity.class);
-                localSave.putExtra("new_event", newEvent);
+                TextView eventNameTextView = (TextView) findViewById(R.id.editEventName);
+                String eventName = eventNameTextView.getText().toString();
+                if (!EditEvent.set(CrystalEvent.NAME, eventName))
+                {
+                    Toast.makeText(EditEvent.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+
+                EditEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
+
+                localCalendar.add(EditEvent);
+                localCalendar.save(EditEvent.this);
+
+                Intent localSave = new Intent(getApplicationContext(), ViewEvent.class);
+                localSave.putExtra("Event", EditEvent);
                 startActivity(localSave);
             }
         });
 
-        Button addNotifButton = (Button) findViewById(R.id.add_notif);
+        Button addNotifButton = (Button) findViewById(R.id.edit_add_notif);
         addNotifButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainNewLayout);
+                final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.editMainNewLayout);
 
-                final LinearLayout newNotifRow = new LinearLayout(NewEvent.this);
+                final LinearLayout newNotifRow = new LinearLayout(EditEvent.this);
                 newNotifRow.setOrientation(LinearLayout.HORIZONTAL);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 newNotifRow.setLayoutParams(layoutParams);
 
-                EditText notifNumber = new EditText(NewEvent.this);
-                Spinner notifTypes = new Spinner(NewEvent.this);
-                Button deleteOption = new Button(NewEvent.this);
+                EditText notifNumber = new EditText(EditEvent.this);
+                Spinner notifTypes = new Spinner(EditEvent.this);
+                Button deleteOption = new Button(EditEvent.this);
 
                 newNotifRow.addView(notifNumber);
                 newNotifRow.addView(notifTypes);
@@ -416,7 +404,7 @@ public class NewEvent extends AppCompatActivity {
                 LinearLayout.LayoutParams notifTypeLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
                 notifTypes.setLayoutParams(notifTypeLayout);
 
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(NewEvent.this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
+                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditEvent.this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 notifTypes.setAdapter(adapter);
 
@@ -428,23 +416,18 @@ public class NewEvent extends AppCompatActivity {
                         mainLayout.removeView(newNotifRow);
                     }
                 });
-
-
-
-
-
             }
         });
     }
 
     AlertDialog getEndBeforeStartAlert()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewEvent.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditEvent.this);
 
         builder.setMessage("The time you have entered is before your start time (" + DateFormat.getDateInstance().format(startCalendar.getTime()) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime()) + ").");
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                TimePickerDialog endTimeSelect = new TimePickerDialog(NewEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false);
+                TimePickerDialog endTimeSelect = new TimePickerDialog(EditEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false);
                 String startTimeTitle = getResources().getString(R.string.start_time);
                 if (!multipleDayCheck.isChecked()) {
                     String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
@@ -467,5 +450,4 @@ public class NewEvent extends AppCompatActivity {
     {
         return startCalendar.before(endCalendar);
     }
-
 }

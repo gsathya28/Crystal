@@ -35,7 +35,13 @@
         <activity
             android:name=".ViewEvent"
             android:parentActivityName=".MainActivity">
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.clairvoyance.crystal.MainActivity" />
+        </activity>
+        <activity
+            android:name=".EditEvent"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.clairvoyance.crystal.MainActivity" />

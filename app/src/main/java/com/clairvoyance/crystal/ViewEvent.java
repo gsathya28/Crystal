@@ -7,11 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class ViewEvent extends AppCompatActivity {
 
     CrystalEvent event;
+    Button deleteButton;
+    Button editButton;
+    Button pushButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,20 @@ public class ViewEvent extends AppCompatActivity {
 
         startTimeTextView.setText(event.displayTimeString(CrystalEvent.START_TIME));
         endTimeTextView.setText(event.displayTimeString(CrystalEvent.END_TIME));
+
+        editButton = (Button) findViewById(R.id.editEventButton);
+        deleteButton = (Button) findViewById(R.id.deleteEventButton);
+        pushButton = (Button) findViewById(R.id.pushEventButton);
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent editEventIntent = new Intent(v.getContext(), EditEvent.class);
+                editEventIntent.putExtra("Event", event);
+                startActivity(editEventIntent);
+            }
+        });
+
 
     }
 }
