@@ -30,7 +30,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class EditEvent extends AppCompatActivity {
@@ -190,8 +189,8 @@ public class EditEvent extends AppCompatActivity {
         // Setting up default time stuff
 
 
-        startCalendar = eventEdited.getStartTime();
-        endCalendar = eventEdited.getEndTime();
+        startCalendar = (Calendar) eventEdited.getStartTime().clone();
+        endCalendar = (Calendar) eventEdited.getEndTime().clone();
 
         // Extracting all the views
         startDateTextView = (TextView) findViewById(R.id.editStartDate);
