@@ -66,14 +66,13 @@ class CrystalCalendar implements Serializable{
     void add(CrystalEvent event)
     {
         // Todo: Add based on start Date - for check
-
+        eventCount++;
         // If empty, just add the event in a new date group
         if (crystalEvents.isEmpty())
         {
             ArrayList<CrystalEvent> newDateList = new ArrayList<>();
             newDateList.add(event);
             crystalEvents.add(newDateList);
-            eventCount++;
             return;
         }
 
@@ -93,12 +92,10 @@ class CrystalCalendar implements Serializable{
                 if (dateEvent.getStartTime().getTimeInMillis() >= startCalendar.getTimeInMillis())
                 {
                     realDateList.add(realDateList.indexOf(dateEvent), event);
-                    eventCount++;
                     return;
                 }
             }
             realDateList.add(event);
-            eventCount++;
         }
         else { // If it isn't found
             ArrayList<CrystalEvent> newDateList = new ArrayList<>();
@@ -113,12 +110,10 @@ class CrystalCalendar implements Serializable{
                 if (strippedStartCalendar.before(strippedDate)) {
 
                     crystalEvents.add(crystalEvents.indexOf(dateList), newDateList);
-                    eventCount++;
                     return;
                 }
             }
             crystalEvents.add(newDateList);
-            eventCount++;
         }
     }
 

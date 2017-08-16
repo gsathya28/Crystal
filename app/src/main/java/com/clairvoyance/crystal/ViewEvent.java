@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 public class ViewEvent extends AppCompatActivity {
 
+    CrystalCalendar localCalendar;
     CrystalEvent event;
     Button deleteButton;
     Button editButton;
@@ -26,8 +27,8 @@ public class ViewEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-        final CrystalCalendar localCalendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
-        CrystalCalendar.read(ViewEvent.this, localCalendar);
+        localCalendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
+        localCalendar = CrystalCalendar.read(ViewEvent.this, localCalendar);
 
         Intent viewEventIntent = getIntent();
         event = (CrystalEvent) viewEventIntent.getSerializableExtra("Event");
@@ -75,10 +76,12 @@ public class ViewEvent extends AppCompatActivity {
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         localCalendar.remove(event);
+                        localCalendar.save(ViewEvent.this);
                         Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(mainActivityIntent);
-                        localCalendar.save(ViewEvent.this);
+
                     }
                 });
 
