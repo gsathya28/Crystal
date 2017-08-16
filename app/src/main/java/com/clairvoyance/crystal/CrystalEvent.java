@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,6 +76,8 @@ class CrystalEvent implements Serializable {
         Resources r = context.getResources();
         int fontSizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, r.getDisplayMetrics());
         eventButton.setTextSize(fontSizeInPx);
+        eventButton.setSingleLine();
+        eventButton.setEllipsize(TextUtils.TruncateAt.END);
 
         // Formatting Button - Text Alignment
         int topPaddingAdjustment = 5;
@@ -113,7 +116,7 @@ class CrystalEvent implements Serializable {
 
     protected Calendar getEndTime() { return endTime; }
 
-    protected String displayTimeString(int field)
+    protected String displayTimeStringInView(int field)
     {
         String finalString;
         switch (field) {
@@ -129,6 +132,17 @@ class CrystalEvent implements Serializable {
 
                 finalString = endTimeText + "\n" + endDateText;
                 return finalString;
+        }
+        return "";
+    }
+
+    protected String displayTimeStringInAgenda(int field)
+    {
+        switch (field) {
+            case START_TIME:
+                return DateFormat.getTimeInstance(DateFormat.SHORT).format(startTime.getTime());
+            case END_TIME:
+                return DateFormat.getTimeInstance(DateFormat.SHORT).format(endTime.getTime());
         }
         return "";
     }

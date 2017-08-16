@@ -51,8 +51,8 @@ public class ViewEvent extends AppCompatActivity {
         TextView startTimeTextView = (TextView) findViewById(R.id.startTimeView);
         TextView endTimeTextView = (TextView) findViewById(R.id.endTimeView);
 
-        startTimeTextView.setText(event.displayTimeString(CrystalEvent.START_TIME));
-        endTimeTextView.setText(event.displayTimeString(CrystalEvent.END_TIME));
+        startTimeTextView.setText(event.displayTimeStringInView(CrystalEvent.START_TIME));
+        endTimeTextView.setText(event.displayTimeStringInView(CrystalEvent.END_TIME));
 
         editButton = (Button) findViewById(R.id.editEventButton);
         deleteButton = (Button) findViewById(R.id.deleteEventButton);

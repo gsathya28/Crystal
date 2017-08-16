@@ -215,8 +215,9 @@ class CrystalCalendar implements Serializable{
 
         for (CrystalEvent event : dateOfEvent)
         {
+
             Button eventButton = event.generateButton(context);
-            eventButton.setText(event.get(CrystalEvent.NAME));
+            eventButton.setText(event.displayTimeStringInAgenda(CrystalEvent.START_TIME) + " - " + event.displayTimeStringInAgenda(CrystalEvent.END_TIME) + ": " + event.get(CrystalEvent.NAME));
             innerLinearLayout.addView(eventButton);
         }
 
