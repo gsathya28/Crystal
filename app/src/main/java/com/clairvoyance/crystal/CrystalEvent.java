@@ -73,8 +73,7 @@ class CrystalEvent implements Serializable {
         eventButton.setBackgroundColor(Color.parseColor("#0000FF"));
 
         // Formatting Font -
-        Resources r = context.getResources();
-        int fontSizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12, r.getDisplayMetrics());
+        int fontSizeInPx = CrystalGUI.getFontSizeInPx(context, 10, CrystalGUI.FONT);
         eventButton.setTextSize(fontSizeInPx);
         eventButton.setSingleLine();
         eventButton.setEllipsize(TextUtils.TruncateAt.END);
@@ -86,7 +85,7 @@ class CrystalEvent implements Serializable {
         eventButton.setPadding(
                 eventButton.getPaddingLeft() + leftPaddingAdjustment,
                 eventButton.getPaddingTop() + topPaddingAdjustment,
-                eventButton.getPaddingRight() - leftPaddingAdjustment,
+                eventButton.getPaddingRight() + leftPaddingAdjustment,
                 eventButton.getPaddingBottom() - topPaddingAdjustment
         );
 
