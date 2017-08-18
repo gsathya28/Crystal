@@ -46,6 +46,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.clairvoyance.crystal.MainActivity" />
         </activity>
+
+        <service
+            android:name=".CalendarCheckService"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

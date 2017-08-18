@@ -3,6 +3,8 @@ package com.clairvoyance.crystal;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -21,20 +23,37 @@ import java.util.Iterator;
 
 /**
  * Created by Sathya on 8/9/2017.
- * Sweet!
+ *
+ * The <code>CrystalCalendar</code> class is a class that acts a calendar, holding all events, and provides methods for data transfer,
+ * iCal conversion, and manipulation of events.
+ *
  */
 
 class CrystalCalendar implements Serializable{
 
+    /**
+     * All the values this class holds
+     */
     private String userid;
     private ArrayList<ArrayList<CrystalEvent>> crystalEvents = new ArrayList<>();
     int eventCount = 0;
 
-    CrystalCalendar(String id)
+    /**
+     * A constructor that only requires an id.
+     *
+     * @param id - an id to distinguish this localCalendar from other calendars
+     */
+    private CrystalCalendar(String id)
     {
         userid = id;
     }
 
+    /**
+     * Saves the calendar data in the internal storage - filename: localCalendar.txt (will change)
+     *
+     * @param context the <code>Context</code> in which the save is being done in, so internal storage writing permissions are given
+     * @return boolean regarding the success of the save
+     */
     boolean save(Context context)
     {
         try {
@@ -48,14 +67,21 @@ class CrystalCalendar implements Serializable{
         return true;
     }
 
-    static CrystalCalendar read(Context context, CrystalCalendar calendar)
+    /**
+     * Reads the calendar data from the internal storage - filename: localCalendar.txt
+     *
+     * @param context the <code>Context</code> in which the read is being done in, so internal storage writing permissions are given
+     * @return <code>CrystalCalendar</code> object with data read from localCalendar.txt
+     */
+    static CrystalCalendar read(Context context)
     {
-
+        CrystalCalendar calendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
         try {
             FileInputStream fIn = context.openFileInput("localCalendar");
             byte[] byteHolder = new byte[fIn.available()];
-            fIn.read(byteHolder);
-            calendar = (CrystalCalendar) Serializer.deserialize(byteHolder);
+            int x = fIn.read(byteHolder);
+            if (x != -1)
+                calendar = (CrystalCalendar) Serializer.deserialize(byteHolder);
         } catch (IOException|ClassNotFoundException i)
         {
             Log.d("Read Error: ", i.getMessage());
@@ -63,6 +89,11 @@ class CrystalCalendar implements Serializable{
         return calendar;
     }
 
+    /**
+     * Adds an event to the list of events in the calendar sorted by date of the start time
+     *
+     * @param event the event to be added
+     */
     void add(CrystalEvent event)
     {
         // Todo: Add based on start Date - for check
@@ -117,6 +148,12 @@ class CrystalCalendar implements Serializable{
         }
     }
 
+    /**
+     * Removes an event from the list of events
+     *
+     * @param event the event to be deleted
+     * @return boolean regarding the success of the removal
+     */
     boolean remove(CrystalEvent event)
     {
         ArrayList<CrystalEvent> dateList = findDate(event);
@@ -153,6 +190,13 @@ class CrystalCalendar implements Serializable{
         return false;
     }
 
+    /**
+     * Finds the <code>ArrayList</code> that holds all the events with the same date as the event passed in
+     *
+     * @param event - the event we need to find the date for
+     * @return <code>ArrayList</code> if there are events with same date as the event passed in, <code>null</code> if no events with the same date are found
+     */
+    @Nullable
     private ArrayList<CrystalEvent> findDate(CrystalEvent event)
     {
         Calendar startCalendar = event.getStartTime();
@@ -176,11 +220,22 @@ class CrystalCalendar implements Serializable{
         return null;
     }
 
+    /**
+     *
+     * @return the <code>ArrayList</code> of all the events sorted by date (in <code>ArrayLists</code>)
+     */
     ArrayList<ArrayList<CrystalEvent>> getEvents()
     {
         return crystalEvents;
     }
 
+    /**
+     * Generates a layout of all the events on a particular date for the Agenda View (activity_main.xml)
+     *
+     * @param context the context in which the layout is being generated in
+     * @param dateOfEvent the date of the <code>ArrayList</code> of events.
+     * @return a <code>LinearLayout</code> with all the events on a certain date.
+     */
     LinearLayout generateAgendaLinearLayout(Context context, ArrayList<CrystalEvent> dateOfEvent){
 
         LinearLayout innerLinearLayout = new LinearLayout(context);
@@ -212,7 +267,7 @@ class CrystalCalendar implements Serializable{
         {
 
             Button eventButton = event.generateButton(context);
-            eventButton.setText(event.displayTimeStringInAgenda(CrystalEvent.START_TIME) + " - " + event.displayTimeStringInAgenda(CrystalEvent.END_TIME) + ": " + event.get(CrystalEvent.NAME));
+            eventButton.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.AGENDA_VIEW) + " - " + event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.AGENDA_VIEW) + ": " + event.get(CrystalEvent.NAME));
             innerLinearLayout.addView(eventButton);
         }
 

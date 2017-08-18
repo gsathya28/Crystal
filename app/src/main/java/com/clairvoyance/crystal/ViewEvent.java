@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,34 +26,49 @@ public class ViewEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-        localCalendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
-        localCalendar = CrystalCalendar.read(ViewEvent.this, localCalendar);
+        localCalendar = CrystalCalendar.read(ViewEvent.this);
 
         Intent viewEventIntent = getIntent();
         event = (CrystalEvent) viewEventIntent.getSerializableExtra("Event");
 
+        setToolbar();
+        setText();
+        setButtons();
+
+
+
+
+    }
+
+    private void setToolbar() {
         // Toolbar Setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar2);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        myToolbar.setTitle(event.get(CrystalEvent.NAME));
+        myToolbar.setTitle("New Event");
         setSupportActionBar(myToolbar);
 
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
 
         // Enable the Up button
-        try {
-            ab.setDisplayHomeAsUpEnabled(true);
-        } catch (NullPointerException ne) {
-            Log.d("Action Bar", ne.getMessage());
+        if (ab != null) {
+            try {
+                ab.setDisplayHomeAsUpEnabled(true);
+            } catch (NullPointerException ne) {
+                Log.d("Action Bar", ne.getMessage());
+            }
         }
+    }
 
+    private void setText(){
         TextView startTimeTextView = (TextView) findViewById(R.id.startTimeView);
         TextView endTimeTextView = (TextView) findViewById(R.id.endTimeView);
 
-        startTimeTextView.setText(event.displayTimeStringInView(CrystalEvent.START_TIME));
-        endTimeTextView.setText(event.displayTimeStringInView(CrystalEvent.END_TIME));
+        startTimeTextView.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.VIEW_EVENT));
+        endTimeTextView.setText(event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.VIEW_EVENT));
+    }
 
+    private void setButtons(){
         editButton = (Button) findViewById(R.id.editEventButton);
         deleteButton = (Button) findViewById(R.id.deleteEventButton);
         pushButton = (Button) findViewById(R.id.pushEventButton);
@@ -95,7 +109,5 @@ public class ViewEvent extends AppCompatActivity {
 
             }
         });
-
-
     }
 }

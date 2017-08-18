@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -160,17 +159,23 @@ public class EditEvent extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Setup Local Calendar
-        // Todo: send localCalendar through Intents
-        localCalendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
         Log.d("Calendar Stats", "Calendar Created not Written");
-        localCalendar = CrystalCalendar.read(this, localCalendar);
+        localCalendar = CrystalCalendar.read(this);
 
         eventEdited = (CrystalEvent) getIntent().getSerializableExtra("Event");
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
 
+        setToolbar();
+        setCalendars();
+        setText();
+        setCheckBoxes();
+        setSpinner();
+        setButtons();
+    }
+
+    protected void setToolbar() {
         // Toolbar Setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.editToolbar);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
@@ -181,18 +186,21 @@ public class EditEvent extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
 
         // Enable the Up button
-        try {
-            ab.setDisplayHomeAsUpEnabled(true);
-        } catch (NullPointerException ne) {
-            Log.d("Action Bar", ne.getMessage());
+        if (ab != null) {
+            try {
+                ab.setDisplayHomeAsUpEnabled(true);
+            } catch (NullPointerException ne) {
+                Log.d("Action Bar", ne.getMessage());
+            }
         }
-        // Setting up default time stuff
+    }
 
-
+    protected void setCalendars() {
         startCalendar = (Calendar) eventEdited.getStartTime().clone();
         endCalendar = (Calendar) eventEdited.getEndTime().clone();
+    }
 
-        // Extracting all the views
+    protected void setText() {
         startDateTextView = (TextView) findViewById(R.id.editStartDate);
         endDateTextView = (TextView) findViewById(R.id.editEndDate);
         startTimeTextView = (TextView) findViewById(R.id.editStartTime);
@@ -201,35 +209,12 @@ public class EditEvent extends AppCompatActivity {
         startTimeTitleView = (TextView) findViewById(R.id.editStartTimeTitle);
         endDateTitleView = (TextView) findViewById(R.id.editEndDateTitle);
         endTimeTitleView = (TextView) findViewById(R.id.editEndTimeTitle);
-        reminderCheck = (CheckBox) findViewById(R.id.editReminderCheckBox);
-        allDayCheck = (CheckBox) findViewById(R.id.editAllDayCheckBox);
-        multipleDayCheck = (CheckBox) findViewById(R.id.editMultipleDayCheckBox);
+
         startDateRow = (LinearLayout) findViewById(R.id.editStartDateRow);
         startTimeRow = (LinearLayout) findViewById(R.id.editStartTimeRow);
         endDateRow = (LinearLayout) findViewById(R.id.editEndDateRow);
         endTimeRow = (LinearLayout) findViewById(R.id.editEndTimeRow);
 
-        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.editPushNotificationTypes);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        pushNotifTimeTypeSpinner.setAdapter(adapter);
-
-        Calendar checkCalendar = Calendar.getInstance();
-        checkCalendar.set(Calendar.HOUR_OF_DAY, 23);
-        if (startCalendar.get(Calendar.HOUR_OF_DAY) == checkCalendar.get(Calendar.HOUR_OF_DAY))
-        {
-            multipleDayCheck.setChecked(true);
-        }
-
-        endDateRow.setVisibility(View.GONE);
-
-        // Extracting all the Buttons
-        Button startTimeButton = (Button) findViewById(R.id.editStartTimeSet);
-        Button endTimeButton = (Button) findViewById(R.id.editEndTimeSet);
-        Button startDateButton = (Button) findViewById(R.id.editStartDateSet);
-        Button endDateButton = (Button) findViewById(R.id.editEndDateSet);
-
-        // Displaying default time stuff
         String startDateText = DateFormat.getDateInstance().format(startCalendar.getTime());
         startDateTextView.setText(startDateText);
         String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
@@ -239,46 +224,14 @@ public class EditEvent extends AppCompatActivity {
         String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
         endTimeTextView.setText(endTimeText);
 
-        // Setting up the Set-Time Dialogs through Click Listeners
-        startTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new TimePickerDialog(EditEvent.this, R.style.Theme_AppCompat_DayNight_Dialog, startTimeDialogListener, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), false).show();
-            }
-        });
+        endDateRow.setVisibility(View.GONE);
+    }
 
-        endTimeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new TimePickerDialog(EditEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false).show();
-            }
-        });
+    protected void setCheckBoxes() {
+        reminderCheck = (CheckBox) findViewById(R.id.editReminderCheckBox);
+        allDayCheck = (CheckBox) findViewById(R.id.editAllDayCheckBox);
+        multipleDayCheck = (CheckBox) findViewById(R.id.editMultipleDayCheckBox);
 
-        startDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog startDateSelect = new DatePickerDialog(EditEvent.this, startDateDialogListener, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
-                startDateSelect.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() + 1000);
-                startDateSelect.setTitle("");
-                startDateSelect.show();
-            }
-        });
-
-
-        endDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog endDateSelect = new DatePickerDialog(EditEvent.this, endDateDialogListener, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH));
-                endDateSelect.getDatePicker().setMinDate(startCalendar.getTimeInMillis() + 1000);
-                endDateSelect.setTitle("");
-                endDateSelect.show();
-            }
-        });
-
-        // Reminder Checkbox Listener
-        /* Todo: Make sure all the calendars are modified when the checkboxes are checked/unchecked
-            Not just the textViews
-        */
         reminderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -333,6 +286,73 @@ public class EditEvent extends AppCompatActivity {
                 }
             }
         });
+        Calendar checkCalendar = Calendar.getInstance();
+        checkCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        if (startCalendar.get(Calendar.HOUR_OF_DAY) == checkCalendar.get(Calendar.HOUR_OF_DAY))
+        {
+            multipleDayCheck.setChecked(true);
+        }
+
+    }
+
+    protected void setSpinner() {
+        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.editPushNotificationTypes);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pushNotifTimeTypeSpinner.setAdapter(adapter);
+    }
+
+    protected void setButtons() {
+        // Extracting all the Buttons
+        Button startTimeButton = (Button) findViewById(R.id.editStartTimeSet);
+        Button endTimeButton = (Button) findViewById(R.id.editEndTimeSet);
+        Button startDateButton = (Button) findViewById(R.id.editStartDateSet);
+        Button endDateButton = (Button) findViewById(R.id.editEndDateSet);
+
+        // Displaying default time stuff
+
+
+        // Setting up the Set-Time Dialogs through Click Listeners
+        startTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(EditEvent.this, R.style.Theme_AppCompat_DayNight_Dialog, startTimeDialogListener, startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE), false).show();
+            }
+        });
+
+        endTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new TimePickerDialog(EditEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false).show();
+            }
+        });
+
+        startDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog startDateSelect = new DatePickerDialog(EditEvent.this, startDateDialogListener, startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH));
+                startDateSelect.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() + 1000);
+                startDateSelect.setTitle("");
+                startDateSelect.show();
+            }
+        });
+
+
+        endDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog endDateSelect = new DatePickerDialog(EditEvent.this, endDateDialogListener, endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH));
+                endDateSelect.getDatePicker().setMinDate(startCalendar.getTimeInMillis() + 1000);
+                endDateSelect.setTitle("");
+                endDateSelect.show();
+            }
+        });
+
+        // Reminder Checkbox Listener
+        /* Todo: Make sure all the calendars are modified when the checkboxes are checked/unchecked
+            Not just the textViews
+        */
+
 
         // Time to add the Add-Event Button Listener.
         Button editEventButton = (Button) findViewById(R.id.editSaveButton);
@@ -408,7 +428,7 @@ public class EditEvent extends AppCompatActivity {
                 notifTypes.setAdapter(adapter);
 
                 // Delete Button Formatting + Listener
-                deleteOption.setText("Del");
+                deleteOption.setText(R.string.del);
                 deleteOption.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -3,10 +3,8 @@ package com.clairvoyance.crystal;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -166,6 +164,45 @@ public class NewEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
 
+        setToolbar();
+        setCalendars();
+        setText();
+        setCheckBoxes();
+        setSpinner();
+        setButtons();
+    }
+
+    AlertDialog getEndBeforeStartAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewEvent.this);
+
+        builder.setMessage("The time you have entered is before your start time (" + DateFormat.getDateInstance().format(startCalendar.getTime()) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime()) + ").");
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                TimePickerDialog endTimeSelect = new TimePickerDialog(NewEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false);
+                String startTimeTitle = getResources().getString(R.string.start_time);
+                if (!multipleDayCheck.isChecked()) {
+                    String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
+                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText);
+                }
+                else {
+                    String startTimeText = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(startCalendar.getTime());
+                    String endDateTitle = getResources().getString(R.string.end_date);
+                    String endDateText = DateFormat.getDateInstance(DateFormat.MEDIUM).format(endCalendar.getTime());
+                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText + "\n" + endDateTitle + "\n" + endDateText);
+                }
+                endTimeSelect.show();
+            }
+        });
+
+        return builder.create();
+    }
+
+    protected boolean startBeforeEnd()
+    {
+        return startCalendar.before(endCalendar);
+    }
+
+    protected void setToolbar() {
         // Toolbar Setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
@@ -176,11 +213,16 @@ public class NewEvent extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
 
         // Enable the Up button
-        try {
-            ab.setDisplayHomeAsUpEnabled(true);
-        } catch (NullPointerException ne) {
-            Log.d("Action Bar", ne.getMessage());
+        if (ab != null) {
+            try {
+                ab.setDisplayHomeAsUpEnabled(true);
+            } catch (NullPointerException ne) {
+                Log.d("Action Bar", ne.getMessage());
+            }
         }
+    }
+
+    protected void setCalendars() {
         // Setting up default time stuff
         startCalendar = Calendar.getInstance();
 
@@ -211,6 +253,10 @@ public class NewEvent extends AppCompatActivity {
         endCalendar = (Calendar) startCalendar.clone();
         endCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
+
+    }
+
+    protected void setText() {
         // Extracting all the views
         startDateTextView = (TextView) findViewById(R.id.startDate);
         endDateTextView = (TextView) findViewById(R.id.endDate);
@@ -220,33 +266,11 @@ public class NewEvent extends AppCompatActivity {
         startTimeTitleView = (TextView) findViewById(R.id.startTimeTitle);
         endDateTitleView = (TextView) findViewById(R.id.endDateTitle);
         endTimeTitleView = (TextView) findViewById(R.id.endTimeTitle);
-        reminderCheck = (CheckBox) findViewById(R.id.reminderCheckBox);
-        allDayCheck = (CheckBox) findViewById(R.id.allDayCheckBox);
-        multipleDayCheck = (CheckBox) findViewById(R.id.multipleDayCheckBox);
+
         startDateRow = (LinearLayout) findViewById(R.id.startDateRow);
         startTimeRow = (LinearLayout) findViewById(R.id.startTimeRow);
         endDateRow = (LinearLayout) findViewById(R.id.endDateRow);
         endTimeRow = (LinearLayout) findViewById(R.id.endTimeRow);
-
-        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.pushNotificationTypes);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        pushNotifTimeTypeSpinner.setAdapter(adapter);
-
-        Calendar checkCalendar = Calendar.getInstance();
-        checkCalendar.set(Calendar.HOUR_OF_DAY, 23);
-        if (startCalendar.get(Calendar.HOUR_OF_DAY) == checkCalendar.get(Calendar.HOUR_OF_DAY))
-        {
-            multipleDayCheck.setChecked(true);
-        }
-
-        endDateRow.setVisibility(View.GONE);
-
-        // Extracting all the Buttons
-        Button startTimeButton = (Button) findViewById(R.id.startTimeSet);
-        Button endTimeButton = (Button) findViewById(R.id.endTimeSet);
-        Button startDateButton = (Button) findViewById(R.id.startDateSet);
-        Button endDateButton = (Button) findViewById(R.id.endDateSet);
 
         // Displaying default time stuff
         String startDateText = DateFormat.getDateInstance().format(startCalendar.getTime());
@@ -257,6 +281,16 @@ public class NewEvent extends AppCompatActivity {
         startTimeTextView.setText(startTimeText);
         String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
         endTimeTextView.setText(endTimeText);
+
+        endDateRow.setVisibility(View.GONE);
+    }
+
+    protected void setButtons() {
+        // Extracting all the Buttons
+        Button startTimeButton = (Button) findViewById(R.id.startTimeSet);
+        Button endTimeButton = (Button) findViewById(R.id.endTimeSet);
+        Button startDateButton = (Button) findViewById(R.id.startDateSet);
+        Button endDateButton = (Button) findViewById(R.id.endDateSet);
 
         // Setting up the Set-Time Dialogs through Click Listeners
         startTimeButton.setOnClickListener(new View.OnClickListener() {
@@ -294,66 +328,6 @@ public class NewEvent extends AppCompatActivity {
             }
         });
 
-        // Reminder Checkbox Listener
-        /* Todo: Make sure all the calendars are modified when the checkboxes are checked/unchecked
-            Not just the textViews
-        */
-        reminderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    allDayCheck.setChecked(false);
-                    multipleDayCheck.setChecked(false);
-                    endTimeRow.setVisibility(View.GONE);
-                    startTimeTitleView.setText(R.string.time);
-                    startTimeRow.setVisibility(View.VISIBLE);
-                }
-                else {
-                    endTimeRow.setVisibility(View.VISIBLE);
-                    startTimeTitleView.setText(R.string.start_time);
-                }
-            }
-        });
-        allDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    reminderCheck.setChecked(false);
-                    startTimeRow.setVisibility(View.GONE);
-                    endTimeRow.setVisibility(View.GONE);
-                }
-                else {
-                    startTimeRow.setVisibility(View.VISIBLE);
-                    endTimeRow.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        multipleDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    reminderCheck.setChecked(false);
-                    startDateTitleView.setText(R.string.start_date);
-                    endDateRow.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    startDateTitleView.setText(R.string.date);
-                    endDateRow.setVisibility(View.GONE);
-                    endCalendar = (Calendar) startCalendar.clone();
-                    endCalendar.add(Calendar.HOUR_OF_DAY, 1);
-
-                    String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
-                    endDateTextView.setText(endDateText);
-                    String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
-                    endTimeTextView.setText(endTimeText);
-                }
-            }
-        });
-
-        // Time to add the Add-Event Button Listener.
         Button addEventButton = (Button) findViewById(R.id.addButton);
         addEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -421,51 +395,94 @@ public class NewEvent extends AppCompatActivity {
                 notifTypes.setAdapter(adapter);
 
                 // Delete Button Formatting + Listener
-                deleteOption.setText("Del");
+                deleteOption.setText(R.string.del);
                 deleteOption.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mainLayout.removeView(newNotifRow);
                     }
                 });
-
-
-
-
-
             }
         });
     }
 
-    AlertDialog getEndBeforeStartAlert()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewEvent.this);
+    /* Todo: Make sure all the calendars are modified when the checkboxes are checked/unchecked
+            Not just the textViews
+    */
+    public void setCheckBoxes() {
+        reminderCheck = (CheckBox) findViewById(R.id.reminderCheckBox);
+        allDayCheck = (CheckBox) findViewById(R.id.allDayCheckBox);
+        multipleDayCheck = (CheckBox) findViewById(R.id.multipleDayCheckBox);
 
-        builder.setMessage("The time you have entered is before your start time (" + DateFormat.getDateInstance().format(startCalendar.getTime()) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime()) + ").");
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                TimePickerDialog endTimeSelect = new TimePickerDialog(NewEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false);
-                String startTimeTitle = getResources().getString(R.string.start_time);
-                if (!multipleDayCheck.isChecked()) {
-                    String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
-                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText);
+        reminderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    allDayCheck.setChecked(false);
+                    multipleDayCheck.setChecked(false);
+                    endTimeRow.setVisibility(View.GONE);
+                    startTimeTitleView.setText(R.string.time);
+                    startTimeRow.setVisibility(View.VISIBLE);
                 }
                 else {
-                    String startTimeText = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(startCalendar.getTime());
-                    String endDateTitle = getResources().getString(R.string.end_date);
-                    String endDateText = DateFormat.getDateInstance(DateFormat.MEDIUM).format(endCalendar.getTime());
-                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText + "\n" + endDateTitle + "\n" + endDateText);
+                    endTimeRow.setVisibility(View.VISIBLE);
+                    startTimeTitleView.setText(R.string.start_time);
                 }
-                endTimeSelect.show();
+            }
+        });
+        allDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    reminderCheck.setChecked(false);
+                    startTimeRow.setVisibility(View.GONE);
+                    endTimeRow.setVisibility(View.GONE);
+                }
+                else {
+                    startTimeRow.setVisibility(View.VISIBLE);
+                    endTimeRow.setVisibility(View.VISIBLE);
+                }
             }
         });
 
-        return builder.create();
+        multipleDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    reminderCheck.setChecked(false);
+                    startDateTitleView.setText(R.string.start_date);
+                    endDateRow.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    startDateTitleView.setText(R.string.date);
+                    endDateRow.setVisibility(View.GONE);
+                    endCalendar = (Calendar) startCalendar.clone();
+                    endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+
+                    String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
+                    endDateTextView.setText(endDateText);
+                    String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
+                    endTimeTextView.setText(endTimeText);
+                }
+            }
+        });
+
+        Calendar checkCalendar = Calendar.getInstance();
+        checkCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        if (startCalendar.get(Calendar.HOUR_OF_DAY) == checkCalendar.get(Calendar.HOUR_OF_DAY))
+        {
+            multipleDayCheck.setChecked(true);
+        }
+
     }
 
-    protected boolean startBeforeEnd()
-    {
-        return startCalendar.before(endCalendar);
+    public void setSpinner() {
+        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.pushNotificationTypes);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pushNotifTimeTypeSpinner.setAdapter(adapter);
     }
 
 }

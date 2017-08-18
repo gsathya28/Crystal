@@ -348,7 +348,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingStart="8dp"
-                    android:text="5"
+                    android:text="@string/five"
                     android:textColor="@color/colorText"
                     android:textColorHint="#808080"
                     android:textSize="24sp" />

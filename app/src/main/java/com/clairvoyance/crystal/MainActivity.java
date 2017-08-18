@@ -2,7 +2,6 @@ package com.clairvoyance.crystal;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -53,10 +52,8 @@ public class MainActivity extends AppCompatActivity {
         // Todo: Put this on separate Thread
 
         // Check for saved calendar
-
-        localCalendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
         Log.d("Calendar Stats", "Calendar Created not Written");
-        localCalendar = CrystalCalendar.read(this, localCalendar);
+        localCalendar = CrystalCalendar.read(this);
         eventList = localCalendar.getEvents();
         savedCalendarOnFile = !(eventList.isEmpty());
         // If there's a saved Calendar
@@ -64,9 +61,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        setSupportActionBar(myToolbar);
+        setToolbar();
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -91,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("GUI Stats", "No Events!");
             }
         }
+    }
+
+    private void setToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+        setSupportActionBar(myToolbar);
     }
 
     @Override
