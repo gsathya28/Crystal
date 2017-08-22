@@ -57,7 +57,7 @@ class CrystalCalendar implements Serializable{
     boolean save(Context context)
     {
         try {
-            FileOutputStream fOut = context.openFileOutput("localCalendar", Context.MODE_PRIVATE);
+            FileOutputStream fOut = context.openFileOutput(userid, Context.MODE_PRIVATE);
             fOut.write(Serializer.serialize(this));
             fOut.close();
         } catch (IOException i) {
@@ -77,7 +77,7 @@ class CrystalCalendar implements Serializable{
     {
         CrystalCalendar calendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
         try {
-            FileInputStream fIn = context.openFileInput("localCalendar");
+            FileInputStream fIn = context.openFileInput(calendar.userid);
             byte[] byteHolder = new byte[fIn.available()];
             int x = fIn.read(byteHolder);
             if (x != -1)
