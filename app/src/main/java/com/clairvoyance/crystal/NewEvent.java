@@ -249,6 +249,8 @@ public class NewEvent extends AppCompatActivity {
                 }
                 break;
         }
+        startCalendar.set(Calendar.SECOND, 0);
+        startCalendar.set(Calendar.MILLISECOND, 0);
 
         endCalendar = (Calendar) startCalendar.clone();
         endCalendar.add(Calendar.HOUR_OF_DAY, 1);
@@ -345,7 +347,7 @@ public class NewEvent extends AppCompatActivity {
 
                 newEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
 
-                localCalendar.add(newEvent);
+                localCalendar.add(newEvent, getApplicationContext());
                 localCalendar.save(NewEvent.this);
 
                 Intent localSave = new Intent(getApplicationContext(), MainActivity.class);

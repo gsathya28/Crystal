@@ -47,9 +47,7 @@
                 android:value="com.clairvoyance.crystal.MainActivity" />
         </activity>
 
-        <service
-            android:name=".CalendarCheckService"
-            android:exported="false"/>
+        <receiver android:name=".NotificationPublisher" />
 
     </application>
 

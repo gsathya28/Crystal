@@ -378,7 +378,7 @@ public class EditEvent extends AppCompatActivity {
 
                 EditEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
 
-                localCalendar.add(EditEvent);
+                localCalendar.add(EditEvent, getApplicationContext());
                 localCalendar.save(EditEvent.this);
 
                 Intent localSave = new Intent(getApplicationContext(), ViewEvent.class);
