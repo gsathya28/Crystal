@@ -96,7 +96,7 @@ class CrystalCalendar implements Serializable{
      */
     void add(CrystalEvent event, Context context)
     {
-        event.scheduleNotification(context);
+        event.setStartNotificationIntent(context);
         // Todo: Add based on start Date - for check
         eventCount++;
         // If empty, just add the event in a new date group

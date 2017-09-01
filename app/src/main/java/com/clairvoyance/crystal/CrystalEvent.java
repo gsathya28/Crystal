@@ -261,21 +261,14 @@ class CrystalEvent implements Serializable {
         return hasReminders;
     }
 
-    void scheduleNotification(Context context) {
+    void setStartNotificationIntent(Context context) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
         notificationIntent.putExtra(NotificationPublisher.NAME, name);
         notificationIntent.putExtra(NotificationPublisher.NOTES, notes);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        long futureInMillis = startTime.getTimeInMillis();
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
-        }
-        else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
-        }
+        NotificationPublisher.scheduleNotification(context, startTime, pendingIntent);
     }
 
 

@@ -1,5 +1,6 @@
 package com.clairvoyance.crystal;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -8,6 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
+
+import java.util.Calendar;
 
 /**
  * Created by Sathya on 8/22/2017.
@@ -42,5 +46,16 @@ public class NotificationPublisher extends BroadcastReceiver {
         builder.setContentIntent(resultPendingIntent);
 
         return builder.build();
+    }
+
+    static void scheduleNotification(Context context, Calendar time, PendingIntent pendingIntent) {
+        long futureInMillis = time.getTimeInMillis();
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
+        }
+        else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
+        }
     }
 }
