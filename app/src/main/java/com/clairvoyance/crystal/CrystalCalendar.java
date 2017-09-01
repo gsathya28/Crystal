@@ -117,8 +117,7 @@ class CrystalCalendar implements Serializable{
         // Find the date group we need.
         ArrayList<CrystalEvent> realDateList = findDate(event);
         // If the date group is found:
-        if (realDateList != null)
-        {
+        if (realDateList != null) {
             for (CrystalEvent dateEvent : realDateList)
             {
                 if (dateEvent.getStartTime().getTimeInMillis() >= startCalendar.getTimeInMillis())

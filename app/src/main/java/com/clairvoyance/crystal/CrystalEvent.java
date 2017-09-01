@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -36,6 +37,7 @@ class CrystalEvent implements Serializable {
     private String name = "Untitled Event";
     private String notes = "";
     private String id;
+    private ArrayList<CrystalAlarm> alarms;
 
     /**
      * All the fields that this class holds
@@ -271,6 +273,12 @@ class CrystalEvent implements Serializable {
         NotificationPublisher.scheduleNotification(context, startTime, pendingIntent);
     }
 
+    void setAlarms(Context context, ArrayList<CrystalAlarm> crystalAlarms){
+        alarms = crystalAlarms;
+        for (CrystalAlarm alarm: alarms) {
+            alarm.setNotificationIntent(context);
+        }
+    }
 
 
 

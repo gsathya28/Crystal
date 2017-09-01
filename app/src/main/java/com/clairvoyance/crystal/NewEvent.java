@@ -29,6 +29,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -485,6 +486,14 @@ public class NewEvent extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pushNotifTimeTypeSpinner.setAdapter(adapter);
+    }
+
+    // Todo: Finish this function
+    private ArrayList<CrystalAlarm> getAlarmsFromLayout(){
+        ArrayList<CrystalAlarm> alarms = new ArrayList<>();
+        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainNewLayout);
+        LinearLayout lastLayout = (LinearLayout) mainLayout.getChildAt(mainLayout.getChildCount() - 1);
+        return alarms;
     }
 
 }
