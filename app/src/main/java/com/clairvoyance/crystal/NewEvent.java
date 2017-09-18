@@ -42,6 +42,7 @@ public class NewEvent extends AppCompatActivity {
     LinearLayout startTimeRow;
     LinearLayout endDateRow;
     LinearLayout endTimeRow;
+    LinearLayout pushNotifs;
     TextView startDateTextView;
     TextView endDateTextView;
     TextView startTimeTextView;
@@ -53,7 +54,6 @@ public class NewEvent extends AppCompatActivity {
     CheckBox reminderCheck;
     CheckBox allDayCheck;
     CheckBox multipleDayCheck;
-    Spinner pushNotifTimeTypeSpinner;
 
     CrystalCalendar localCalendar;
     boolean eventInPast;
@@ -169,7 +169,6 @@ public class NewEvent extends AppCompatActivity {
         setCalendars();
         setText();
         setCheckBoxes();
-        setSpinner();
         setButtons();
     }
 
@@ -255,7 +254,6 @@ public class NewEvent extends AppCompatActivity {
 
         endCalendar = (Calendar) startCalendar.clone();
         endCalendar.add(Calendar.HOUR_OF_DAY, 1);
-
 
     }
 
@@ -347,12 +345,12 @@ public class NewEvent extends AppCompatActivity {
                 }
 
                 newEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
+                newEvent.setAlarms(getApplicationContext(), getAlarmsFromLayout(newEvent));
 
                 localCalendar.add(newEvent, getApplicationContext());
                 localCalendar.save(NewEvent.this);
 
                 Intent localSave = new Intent(getApplicationContext(), MainActivity.class);
-                localSave.putExtra("new_event", newEvent);
                 startActivity(localSave);
             }
         });
@@ -363,9 +361,13 @@ public class NewEvent extends AppCompatActivity {
             public void onClick(View v) {
                 final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainNewLayout);
 
+                pushNotifs = new LinearLayout(NewEvent.this);
+                pushNotifs.setOrientation(LinearLayout.VERTICAL);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                pushNotifs.setLayoutParams(layoutParams);
+
                 final LinearLayout newNotifRow = new LinearLayout(NewEvent.this);
                 newNotifRow.setOrientation(LinearLayout.HORIZONTAL);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 newNotifRow.setLayoutParams(layoutParams);
 
                 EditText notifNumber = new EditText(NewEvent.this);
@@ -375,7 +377,8 @@ public class NewEvent extends AppCompatActivity {
                 newNotifRow.addView(notifNumber);
                 newNotifRow.addView(notifTypes);
                 newNotifRow.addView(deleteOption);
-                mainLayout.addView(newNotifRow, mainLayout.getChildCount() - 1);
+                pushNotifs.addView(newNotifRow);
+                mainLayout.addView(pushNotifs, mainLayout.getChildCount() - 1);
 
                 // NotifNumber Formatting
                 int leftValueInPx = (int) (getResources().getDimension(R.dimen.activity_vertical_margin) / 2.);
@@ -481,18 +484,24 @@ public class NewEvent extends AppCompatActivity {
 
     }
 
-    public void setSpinner() {
-        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.pushNotificationTypes);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        pushNotifTimeTypeSpinner.setAdapter(adapter);
-    }
-
     // Todo: Finish this function
-    private ArrayList<CrystalAlarm> getAlarmsFromLayout(){
+    private ArrayList<CrystalAlarm> getAlarmsFromLayout(CrystalEvent event){
         ArrayList<CrystalAlarm> alarms = new ArrayList<>();
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainNewLayout);
-        LinearLayout lastLayout = (LinearLayout) mainLayout.getChildAt(mainLayout.getChildCount() - 1);
+        if (pushNotifs == null)
+            return alarms;
+
+        for(int i = 0; i < pushNotifs.getChildCount(); i++){
+            LinearLayout alarmRow = (LinearLayout) pushNotifs.getChildAt(i);
+            EditText numberString = (EditText) alarmRow.getChildAt(0);
+            int number = Integer.parseInt(numberString.getText().toString());
+
+            Spinner alarmTypes = (Spinner) alarmRow.getChildAt(1);
+            String type = alarmTypes.getSelectedItem().toString();
+
+            CrystalAlarm alarm = new CrystalAlarm(getApplicationContext(), CrystalAlarm.offsetCalendar(event.getStartTime(), number * -1, type));
+            alarm.setOffsetText(event, number, type);
+            alarms.add(alarm);
+        }
         return alarms;
     }
 

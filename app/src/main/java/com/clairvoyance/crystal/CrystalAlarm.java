@@ -17,7 +17,6 @@ public class CrystalAlarm implements Serializable {
     private String name = "Untitled Event";
     private String notes = "";
     private String id;
-    private PendingIntent pendingIntent;
 
     /**
      * All the fields that this class holds
@@ -37,14 +36,37 @@ public class CrystalAlarm implements Serializable {
             rightType = type.substring(0, type.length() - 1);
 
         name = "Event " + event.get(CrystalEvent.NAME) + " will start in " + offset + " " + rightType;
+        notes = "Get to it!";
     }
 
     void setNotificationIntent(Context context) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NAME, name);
         notificationIntent.putExtra(NotificationPublisher.NOTES, notes);
-        pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NotificationPublisher.BEFORE_START, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
         NotificationPublisher.scheduleNotification(context, alarmTime, pendingIntent);
+    }
+
+    static Calendar offsetCalendar(Calendar calendar, int offset, String type)
+    {
+        Calendar offsetCalendar = (Calendar) calendar.clone();
+        switch (type){
+            case "minutes":
+                offsetCalendar.add(Calendar.MINUTE, offset);
+                return offsetCalendar;
+            case "hours":
+                offsetCalendar.add(Calendar.HOUR_OF_DAY, offset);
+                return offsetCalendar;
+            case "days":
+                offsetCalendar.add(Calendar.DAY_OF_YEAR, offset);
+                return offsetCalendar;
+            case "weeks":
+                offsetCalendar.add(Calendar.WEEK_OF_YEAR, offset);
+                return offsetCalendar;
+            default:
+                return offsetCalendar;
+        }
     }
 }

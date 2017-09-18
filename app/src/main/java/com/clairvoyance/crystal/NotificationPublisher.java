@@ -24,6 +24,9 @@ public class NotificationPublisher extends BroadcastReceiver {
     public static String NAME = "name";
     public static String NOTES = "notes";
 
+    public final static int START = 0;
+    public final static int BEFORE_START = 1;
+
     public void onReceive(Context context, Intent intent) {
 
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -41,6 +44,7 @@ public class NotificationPublisher extends BroadcastReceiver {
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(sound);
 
+        // For leading user into main Activity
         Intent resultIntent = new Intent(context, MainActivity.class);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(resultPendingIntent);
@@ -51,10 +55,11 @@ public class NotificationPublisher extends BroadcastReceiver {
     static void scheduleNotification(Context context, Calendar time, PendingIntent pendingIntent) {
         long futureInMillis = time.getTimeInMillis();
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
-        }
-        else {
+        } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
         }
     }
