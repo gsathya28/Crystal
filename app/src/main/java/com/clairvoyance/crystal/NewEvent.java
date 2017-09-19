@@ -32,6 +32,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+// Todo: Fix DatePicker so that the user can pick the current date as an option.
 
 public class NewEvent extends AppCompatActivity {
 
@@ -344,6 +345,8 @@ public class NewEvent extends AppCompatActivity {
                     Toast.makeText(NewEvent.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
 
+                String notes = ((EditText) findViewById(R.id.eventNotes)).getText().toString();
+                newEvent.set(CrystalEvent.NOTES, notes);
                 newEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
                 newEvent.setAlarms(getApplicationContext(), getAlarmsFromLayout(newEvent));
 

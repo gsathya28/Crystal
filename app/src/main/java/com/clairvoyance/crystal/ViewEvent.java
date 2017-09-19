@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ViewEvent extends AppCompatActivity {
@@ -35,16 +37,13 @@ public class ViewEvent extends AppCompatActivity {
         setText();
         setButtons();
 
-
-
-
     }
 
     private void setToolbar() {
         // Toolbar Setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar2);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        myToolbar.setTitle("New Event");
+        myToolbar.setTitle(event.get(CrystalEvent.NAME));
         setSupportActionBar(myToolbar);
 
         // Get a support ActionBar corresponding to this toolbar
@@ -66,6 +65,10 @@ public class ViewEvent extends AppCompatActivity {
 
         startTimeTextView.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.VIEW_EVENT));
         endTimeTextView.setText(event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.VIEW_EVENT));
+
+        LinearLayout detailLayout = (LinearLayout) findViewById(R.id.detailLayout);
+        TextView notesText = (TextView) findViewById(R.id.view_notes);
+        notesText.setText(event.get(CrystalEvent.NOTES));
     }
 
     private void setButtons(){
