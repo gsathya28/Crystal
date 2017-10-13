@@ -280,6 +280,9 @@ class CrystalEvent implements Serializable {
         }
     }
 
+    ArrayList<CrystalAlarm> getAlarms() {
+        return alarms;
+    }
 
 
 }

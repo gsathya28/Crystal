@@ -31,7 +31,7 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class EditEvent extends AppCompatActivity {
+public class EditEvent extends CrystalActivity {
 
     Calendar startCalendar;
     Calendar endCalendar;

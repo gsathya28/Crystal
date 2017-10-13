@@ -34,7 +34,7 @@ import java.util.Calendar;
 
 // Todo: Fix DatePicker so that the user can pick the current date as an option.
 
-public class NewEvent extends AppCompatActivity {
+public class NewEvent extends CrystalActivity {
 
     Calendar startCalendar;
     Calendar endCalendar;
@@ -507,5 +507,4 @@ public class NewEvent extends AppCompatActivity {
         }
         return alarms;
     }
-
 }
