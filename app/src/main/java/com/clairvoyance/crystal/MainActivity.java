@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+// Todo: Fix Back Button Problems
 public class MainActivity extends CrystalActivity {
 
     private TextView mTextMessage;
@@ -73,13 +74,8 @@ public class MainActivity extends CrystalActivity {
 
             isAgendaActive = true;
             if (savedCalendarOnFile) {
-
                 LinearLayout outerLinearLayout = (LinearLayout) findViewById(R.id.mainLayout);
-                for (ArrayList<CrystalEvent> dateOfEvent : eventList) {
-
-                    LinearLayout innerLinearLayout = localCalendar.generateAgendaLinearLayout(MainActivity.this, dateOfEvent);
-                    outerLinearLayout.addView(innerLinearLayout);
-                }
+                CrystalGUI.generateOuterAgendaLinearLayout(MainActivity.this, outerLinearLayout, eventList);
             } else {
                 // Generate A block of code saying that a new event should be made yo!
                 Log.d("GUI Stats", "No Events!");
