@@ -11,7 +11,7 @@ import android.util.TypedValue;
 
 class CrystalGUI {
 
-    final static int LAYOUT = 0;
+    private final static int LAYOUT = 0;
     final static int FONT = 1;
 
     public CrystalGUI() {

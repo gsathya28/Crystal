@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ViewEvent extends CrystalActivity {
@@ -57,6 +56,7 @@ public class ViewEvent extends CrystalActivity {
         }
     }
 
+    // Todo: Finish setting Text!
     private void setText(){
         TextView startTimeTextView = (TextView) findViewById(R.id.startTimeView);
         TextView endTimeTextView = (TextView) findViewById(R.id.endTimeView);
@@ -64,7 +64,7 @@ public class ViewEvent extends CrystalActivity {
         startTimeTextView.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.VIEW_EVENT));
         endTimeTextView.setText(event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.VIEW_EVENT));
 
-        LinearLayout detailLayout = (LinearLayout) findViewById(R.id.detailLayout);
+        // LinearLayout detailLayout = (LinearLayout) findViewById(R.id.detailLayout);
         TextView notesText = (TextView) findViewById(R.id.view_notes);
         notesText.setText(event.get(CrystalEvent.NOTES));
     }

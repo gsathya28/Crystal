@@ -486,7 +486,6 @@ public class NewEvent extends CrystalActivity {
 
     }
 
-    // Todo: Finish this function
     private ArrayList<CrystalAlarm> getAlarmsFromLayout(CrystalEvent event){
         ArrayList<CrystalAlarm> alarms = new ArrayList<>();
         if (pushNotifs == null)
@@ -500,7 +499,7 @@ public class NewEvent extends CrystalActivity {
             Spinner alarmTypes = (Spinner) alarmRow.getChildAt(1);
             String type = alarmTypes.getSelectedItem().toString();
 
-            CrystalAlarm alarm = new CrystalAlarm(getApplicationContext(), CrystalAlarm.offsetCalendar(event.getStartTime(), number * -1, type));
+            CrystalAlarm alarm = new CrystalAlarm(CrystalAlarm.offsetCalendar(event.getStartTime(), number * -1, type));
             alarm.setOffsetText(event, number, type);
             alarms.add(alarm);
         }

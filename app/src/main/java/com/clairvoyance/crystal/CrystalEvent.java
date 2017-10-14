@@ -263,7 +263,7 @@ class CrystalEvent implements Serializable {
 
     void setStartNotificationIntent(Context context) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, NotificationPublisher.START);
         notificationIntent.putExtra(NotificationPublisher.NAME, name);
         notificationIntent.putExtra(NotificationPublisher.NOTES, notes);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);

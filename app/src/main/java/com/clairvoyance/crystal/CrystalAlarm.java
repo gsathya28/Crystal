@@ -9,24 +9,27 @@ import java.util.Calendar;
 
 /**
  * Created by Sathya on 8/26/2017.
+ * Yup!
  */
 
-public class CrystalAlarm implements Serializable {
+class CrystalAlarm implements Serializable {
 
     private Calendar alarmTime;
     private String name = "Untitled Event";
     private String notes = "";
-    private String id;
 
     /**
      * All the fields that this class holds
      */
+
+    /*
     final static int NAME = 2;
     final static int NOTES = 3;
     final static int START_TIME = 4;
     final static int ID = 6;
+    */
 
-    CrystalAlarm(Context context, Calendar time) {
+    CrystalAlarm(Calendar time) {
         alarmTime = time;
     }
 
