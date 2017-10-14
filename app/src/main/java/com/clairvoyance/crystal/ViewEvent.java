@@ -111,4 +111,20 @@ public class ViewEvent extends CrystalActivity {
             }
         });
     }
+
+    @Override
+    protected void setData() {
+
+    }
+
+    @Override
+    protected void setStaticGUI() {
+
+    }
+
+    @Override
+    protected void setDynamicGUI() {
+
+    }
+
 }

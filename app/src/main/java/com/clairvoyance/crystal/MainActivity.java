@@ -23,32 +23,19 @@ public class MainActivity extends CrystalActivity {
     boolean savedCalendarOnFile = false;
     boolean isAgendaActive = false;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_agenda:
-                    mTextMessage.setText(R.string.agenda);
-                    createAgenda();
-                    return true;
-                case R.id.navigation_weekly:
-                    mTextMessage.setText(R.string.weekly);
-                    return true;
-                case R.id.navigation_monthly:
-                    mTextMessage.setText(R.string.monthly);
-                    return true;
-            }
-            return false;
-        }
-
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // Check for local Calendar on Phone
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        setData();
+        setStaticGUI();
+        setDynamicGUI();
+    }
+
+    @Override
+    protected void setData() {
         // Todo: Put this on separate Thread
 
         // Check for saved calendar
@@ -56,18 +43,42 @@ public class MainActivity extends CrystalActivity {
         localCalendar = CrystalCalendar.read(this);
         eventList = localCalendar.getEvents();
         savedCalendarOnFile = !(eventList.isEmpty());
-        // If there's a saved Calendar
+    }
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    @Override
+    protected void setStaticGUI() {
         setToolbar();
+    }
 
+    @Override
+    protected void setDynamicGUI() {
+        BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+                = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_agenda:
+                        mTextMessage.setText(R.string.agenda);
+                        createAgenda();
+                        return true;
+                    case R.id.navigation_weekly:
+                        mTextMessage.setText(R.string.weekly);
+                        return true;
+                    case R.id.navigation_monthly:
+                        mTextMessage.setText(R.string.monthly);
+                        return true;
+                }
+                return false;
+            }
+
+        };
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_agenda);
     }
+
 
     private void createAgenda() {
         if (!isAgendaActive) {
@@ -82,6 +93,7 @@ public class MainActivity extends CrystalActivity {
             }
         }
     }
+
 
     private void setToolbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);

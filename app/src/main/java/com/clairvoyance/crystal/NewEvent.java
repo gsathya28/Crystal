@@ -506,4 +506,19 @@ public class NewEvent extends CrystalActivity {
         return alarms;
     }
 
+    @Override
+    protected void setData() {
+
+    }
+
+    @Override
+    protected void setStaticGUI() {
+
+    }
+
+    @Override
+    protected void setDynamicGUI() {
+
+    }
+
 }

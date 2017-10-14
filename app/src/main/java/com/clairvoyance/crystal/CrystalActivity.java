@@ -8,5 +8,7 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public abstract class CrystalActivity extends AppCompatActivity {
-
+    protected abstract void setStaticGUI();
+    protected abstract void setData();
+    protected abstract void setDynamicGUI();
 }

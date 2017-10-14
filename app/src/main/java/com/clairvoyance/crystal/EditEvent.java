@@ -468,4 +468,19 @@ public class EditEvent extends CrystalActivity {
     {
         return startCalendar.before(endCalendar);
     }
+
+    @Override
+    protected void setData() {
+
+    }
+
+    @Override
+    protected void setStaticGUI() {
+
+    }
+
+    @Override
+    protected void setDynamicGUI() {
+
+    }
 }
