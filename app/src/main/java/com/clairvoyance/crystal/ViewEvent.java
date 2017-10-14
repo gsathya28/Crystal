@@ -4,20 +4,18 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class ViewEvent extends CrystalActivity {
+public class ViewEvent extends AppCompatActivity {
 
     CrystalCalendar localCalendar;
     CrystalEvent event;
@@ -41,7 +39,7 @@ public class ViewEvent extends CrystalActivity {
 
     }
 
-    protected void setToolbar() {
+    private void setToolbar() {
         // Toolbar Setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar2);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
@@ -61,26 +59,19 @@ public class ViewEvent extends CrystalActivity {
         }
     }
 
-    protected void setText(){
+    private void setText(){
         TextView startTimeTextView = (TextView) findViewById(R.id.startTimeView);
         TextView endTimeTextView = (TextView) findViewById(R.id.endTimeView);
 
         startTimeTextView.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.VIEW_EVENT));
         endTimeTextView.setText(event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.VIEW_EVENT));
 
-        LinearLayout notifications = (LinearLayout) findViewById(R.id.view_notifications);
+        LinearLayout detailLayout = (LinearLayout) findViewById(R.id.detailLayout);
         TextView notesText = (TextView) findViewById(R.id.view_notes);
         notesText.setText(event.get(CrystalEvent.NOTES));
-
-        for (CrystalAlarm alarm : event.getAlarms()){
-            TextView alarmView = new TextView(ViewEvent.this);
-            alarmView.setText(alarm.get(CrystalAlarm.OFFSET_TEXT));
-            alarmView.setGravity(Gravity.CENTER);
-            notifications.addView(alarmView);
-        }
     }
 
-    protected void setButtons(){
+    private void setButtons(){
         editButton = (Button) findViewById(R.id.editEventButton);
         deleteButton = (Button) findViewById(R.id.deleteEventButton);
         pushButton = (Button) findViewById(R.id.pushEventButton);

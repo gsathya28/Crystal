@@ -15,10 +15,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends CrystalActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private TextView mTextMessage; // Navigation tracker (no functionality)
-
+    private TextView mTextMessage;
     CrystalCalendar localCalendar;
     ArrayList<ArrayList<CrystalEvent>> eventList;
     boolean savedCalendarOnFile = false;
@@ -57,13 +56,17 @@ public class MainActivity extends CrystalActivity {
         localCalendar = CrystalCalendar.read(this);
         eventList = localCalendar.getEvents();
         savedCalendarOnFile = !(eventList.isEmpty());
+        // If there's a saved Calendar
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        generateGUI();
+        setToolbar();
 
-
+        mTextMessage = (TextView) findViewById(R.id.message);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setSelectedItemId(R.id.navigation_agenda);
     }
 
     private void createAgenda() {
@@ -75,36 +78,17 @@ public class MainActivity extends CrystalActivity {
                 LinearLayout outerLinearLayout = (LinearLayout) findViewById(R.id.mainLayout);
                 for (ArrayList<CrystalEvent> dateOfEvent : eventList) {
 
-                    LinearLayout innerLinearLayout = CrystalGUI.generateAgendaLinearLayout(MainActivity.this, dateOfEvent);
+                    LinearLayout innerLinearLayout = localCalendar.generateAgendaLinearLayout(MainActivity.this, dateOfEvent);
                     outerLinearLayout.addView(innerLinearLayout);
                 }
             } else {
-                // Todo: Generate A block of code saying that a new event should be made yo! (Generate a button!)
+                // Generate A block of code saying that a new event should be made yo!
                 Log.d("GUI Stats", "No Events!");
             }
         }
     }
 
-    protected void generateGUI(){
-        setToolbar();
-        setText();
-        setButtons();
-
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.navigation_agenda);
-    }
-
-    protected void setText(){
-
-    }
-
-    protected void setButtons(){
-
-    }
-
-    protected void setToolbar() {
+    private void setToolbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
         setSupportActionBar(myToolbar);

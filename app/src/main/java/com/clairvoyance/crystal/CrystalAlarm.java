@@ -16,7 +16,6 @@ public class CrystalAlarm implements Serializable {
     private Calendar alarmTime;
     private String name = "Untitled Event";
     private String notes = "";
-    private String offsetText = "";
     private String id;
 
     /**
@@ -25,7 +24,6 @@ public class CrystalAlarm implements Serializable {
     final static int NAME = 2;
     final static int NOTES = 3;
     final static int START_TIME = 4;
-    final static int OFFSET_TEXT = 5;
     final static int ID = 6;
 
     CrystalAlarm(Context context, Calendar time) {
@@ -39,7 +37,6 @@ public class CrystalAlarm implements Serializable {
 
         name = "Event " + event.get(CrystalEvent.NAME) + " will start in " + offset + " " + rightType;
         notes = "Get to it!";
-        offsetText = offset + " " + rightType + "before event starts";
     }
 
     void setNotificationIntent(Context context) {
@@ -71,17 +68,5 @@ public class CrystalAlarm implements Serializable {
             default:
                 return offsetCalendar;
         }
-    }
-
-    String get(int field) {
-        switch (field) {
-            case NAME:
-                return name;
-            case NOTES:
-                return notes;
-            case OFFSET_TEXT:
-                return offsetText;
-        }
-        return null;
     }
 }
