@@ -364,8 +364,6 @@ public class EditEvent extends CrystalActivity {
                     Log.d("remove", "Remove error!");
                 }
 
-                localCalendar.save(EditEvent.this);
-
                 CrystalEvent EditEvent = new CrystalEvent(startCalendar, endCalendar, localCalendar);
 
                 TextView eventNameTextView = (TextView) findViewById(R.id.editEventName);
@@ -378,6 +376,7 @@ public class EditEvent extends CrystalActivity {
                 EditEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
 
                 localCalendar.add(EditEvent, getApplicationContext());
+                // Don't save unless the new event has been placed in
                 localCalendar.save(EditEvent.this);
 
                 Intent localSave = new Intent(getApplicationContext(), ViewEvent.class);

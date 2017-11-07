@@ -330,8 +330,8 @@ public class NewEvent extends CrystalActivity {
                 localCalendar.add(newEvent, getApplicationContext());
                 localCalendar.save(NewEvent.this);
 
-                Intent localSave = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(localSave);
+                Intent eventCreated = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(eventCreated);
             }
         });
 

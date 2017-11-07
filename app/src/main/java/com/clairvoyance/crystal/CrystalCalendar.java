@@ -21,6 +21,8 @@ import java.util.Iterator;
  *
  */
 
+// TODO: Optimize add, remove and findDate algorithms
+
 class CrystalCalendar implements Serializable{
 
     /**
@@ -161,6 +163,7 @@ class CrystalCalendar implements Serializable{
                 if(eventCheck.get(CrystalEvent.ID).equals(event.get(CrystalEvent.ID)))
                 {
                     i.remove();
+                    break;
                 }
             }
 

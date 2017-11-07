@@ -1,9 +1,12 @@
 package com.clairvoyance.crystal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -78,7 +81,7 @@ class CrystalGUI {
 
         for (CrystalEvent event : dateOfEvent)
         {
-            Button eventButton = event.generateButton(context);
+            Button eventButton = generateEventButton(context, event);
             eventButton.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.AGENDA_VIEW) + " - " + event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.AGENDA_VIEW) + ": " + event.get(CrystalEvent.NAME));
             innerLinearLayout.addView(eventButton);
         }
@@ -157,4 +160,67 @@ class CrystalGUI {
 
         mainLayout.addView(pushNotifs, mainLayout.getChildCount() - 1);
     }
+
+    /**
+     * Generates a button that will lead into an Activity holding the event info (activity_view_event.xml)
+     *
+     * @param context the context the button will be generated in
+     * @return a <code>Button</code> with all layout parameters for the Agenda view.
+     */
+    private static Button generateEventButton(final Context context, CrystalEvent event){
+        Button eventButton = new Button(context);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+        int topValueInPx = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
+        int bottomValueInPx = (int) context.getResources().getDimension(R.dimen.activity_vertical_margin);
+        bottomValueInPx = bottomValueInPx / 2;
+        int leftValueInPx = (int) context.getResources().getDimension(R.dimen.activity_horizontal_margin);
+            /*
+            if (i != 0)
+            {
+                topValueInPx = topValueInPx / 2;
+            }
+            */
+        params.setMargins(leftValueInPx, topValueInPx, leftValueInPx, bottomValueInPx);
+        eventButton.setLayoutParams(params);
+
+        // Formatting the TextView - Background and Text Color
+        eventButton.setTextColor(Color.parseColor("#FFFFFF"));
+        eventButton.setBackgroundColor(Color.parseColor("#0000FF"));
+
+        // Formatting Font -
+        int fontSizeInPx = CrystalGUI.getFontSizeInPx(context, 10, CrystalGUI.FONT);
+        eventButton.setTextSize(fontSizeInPx);
+        eventButton.setSingleLine();
+        eventButton.setEllipsize(TextUtils.TruncateAt.END);
+
+        // Formatting Button - Text Alignment
+        int topPaddingAdjustment = 5;
+        int leftPaddingAdjustment = 16;
+        eventButton.setGravity(3);
+        eventButton.setPadding(
+                eventButton.getPaddingLeft() + leftPaddingAdjustment,
+                eventButton.getPaddingTop() + topPaddingAdjustment,
+                eventButton.getPaddingRight() + leftPaddingAdjustment,
+                eventButton.getPaddingBottom() - topPaddingAdjustment
+        );
+
+        final CrystalEvent buttonEvent = event;
+
+        eventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewEventIntent = new Intent(context, ViewEvent.class);
+                viewEventIntent.putExtra("Event", buttonEvent);
+                context.startActivity(viewEventIntent);
+            }
+        });
+
+        return eventButton;
+    }
+
 }
