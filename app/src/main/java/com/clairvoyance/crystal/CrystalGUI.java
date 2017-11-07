@@ -3,10 +3,16 @@ package com.clairvoyance.crystal;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.text.InputType;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -72,7 +78,6 @@ class CrystalGUI {
 
         for (CrystalEvent event : dateOfEvent)
         {
-
             Button eventButton = event.generateButton(context);
             eventButton.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.AGENDA_VIEW) + " - " + event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.AGENDA_VIEW) + ": " + event.get(CrystalEvent.NAME));
             innerLinearLayout.addView(eventButton);
@@ -82,8 +87,7 @@ class CrystalGUI {
 
     }
 
-    static int getFontSizeInPx(Context context, int value, int type)
-    {
+    static int getFontSizeInPx(Context context, int value, int type) {
         Resources r = context.getResources();
         switch (type){
             case FONT:
@@ -95,4 +99,62 @@ class CrystalGUI {
         return 0;
     }
 
+    static String getDateText(Calendar calendar){
+        return DateFormat.getDateInstance().format(calendar.getTime());
+    }
+
+    static String getTimeText(Calendar calendar){
+        return DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
+    }
+
+    static void generatePushNotifLayout(Context context, final LinearLayout mainLayout){
+        LinearLayout pushNotifs = new LinearLayout(context);
+        pushNotifs.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        pushNotifs.setLayoutParams(layoutParams);
+
+        final LinearLayout newNotifRow = new LinearLayout(context);
+        newNotifRow.setOrientation(LinearLayout.HORIZONTAL);
+        newNotifRow.setLayoutParams(layoutParams);
+
+        EditText notifNumber = new EditText(context);
+        Spinner notifTypes = new Spinner(context);
+        Button deleteOption = new Button(context);
+
+        newNotifRow.addView(notifNumber);
+        newNotifRow.addView(notifTypes);
+        newNotifRow.addView(deleteOption);
+        pushNotifs.addView(newNotifRow);
+
+        // NotifNumber Formatting
+        int leftValueInPx = (int) (context.getResources().getDimension(R.dimen.activity_vertical_margin) / 2.);
+        LinearLayout.LayoutParams notifNumberLayout = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 2);
+        notifNumberLayout.setMargins(leftValueInPx, 0, 0, 0);
+        notifNumber.setLayoutParams(notifNumberLayout);
+
+        notifNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+        notifNumber.setPadding(notifNumber.getPaddingLeft(), 0, notifNumber.getPaddingRight(), 0);
+        notifNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
+        notifNumber.setGravity(Gravity.CENTER);
+        notifNumber.setBackgroundResource(R.drawable.border_black);
+
+        // NotifType Formatting + Data
+        LinearLayout.LayoutParams notifTypeLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+        notifTypes.setLayoutParams(notifTypeLayout);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        notifTypes.setAdapter(adapter);
+
+        // Delete Button Formatting + Listener
+        deleteOption.setText(R.string.del);
+        deleteOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainLayout.removeView(newNotifRow);
+            }
+        });
+
+        mainLayout.addView(pushNotifs, mainLayout.getChildCount() - 1);
+    }
 }

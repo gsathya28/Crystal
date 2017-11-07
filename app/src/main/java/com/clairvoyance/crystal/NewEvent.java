@@ -9,13 +9,8 @@ import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -165,61 +160,27 @@ public class NewEvent extends CrystalActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
 
-        setToolbar();
+        setData();
+        setStaticGUI();
+        setDynamicGUI();
+    }
+
+    @Override
+    protected void setData() {
         setCalendars();
+    }
+
+    @Override
+    protected void setStaticGUI() {
+        setToolbar();
         setText();
         setCheckBoxes();
         setButtons();
     }
 
-    AlertDialog getEndBeforeStartAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewEvent.this);
+    @Override
+    protected void setDynamicGUI() {
 
-        builder.setMessage("The time you have entered is before your start time (" + DateFormat.getDateInstance().format(startCalendar.getTime()) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime()) + ").");
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                TimePickerDialog endTimeSelect = new TimePickerDialog(NewEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false);
-                String startTimeTitle = getResources().getString(R.string.start_time);
-                if (!multipleDayCheck.isChecked()) {
-                    String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
-                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText);
-                }
-                else {
-                    String startTimeText = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(startCalendar.getTime());
-                    String endDateTitle = getResources().getString(R.string.end_date);
-                    String endDateText = DateFormat.getDateInstance(DateFormat.MEDIUM).format(endCalendar.getTime());
-                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText + "\n" + endDateTitle + "\n" + endDateText);
-                }
-                endTimeSelect.show();
-            }
-        });
-
-        return builder.create();
-    }
-
-    protected boolean startBeforeEnd()
-    {
-        return startCalendar.before(endCalendar);
-    }
-
-    protected void setToolbar() {
-        // Toolbar Setup
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        myToolbar.setTitle("New Event");
-        setSupportActionBar(myToolbar);
-
-        // Get a support ActionBar corresponding to this toolbar
-        ActionBar ab = getSupportActionBar();
-
-        // Enable the Up button
-        if (ab != null) {
-            try {
-                ab.setDisplayHomeAsUpEnabled(true);
-            } catch (NullPointerException ne) {
-                Log.d("Action Bar", ne.getMessage());
-            }
-        }
     }
 
     protected void setCalendars() {
@@ -257,6 +218,27 @@ public class NewEvent extends CrystalActivity {
 
     }
 
+
+    protected void setToolbar() {
+        // Toolbar Setup
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+        myToolbar.setTitle("New Event");
+        setSupportActionBar(myToolbar);
+
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+
+        // Enable the Up button
+        if (ab != null) {
+            try {
+                ab.setDisplayHomeAsUpEnabled(true);
+            } catch (NullPointerException ne) {
+                Log.d("Action Bar", ne.getMessage());
+            }
+        }
+    }
+
     protected void setText() {
         // Extracting all the views
         startDateTextView = (TextView) findViewById(R.id.startDate);
@@ -274,14 +256,10 @@ public class NewEvent extends CrystalActivity {
         endTimeRow = (LinearLayout) findViewById(R.id.endTimeRow);
 
         // Displaying default time stuff
-        String startDateText = DateFormat.getDateInstance().format(startCalendar.getTime());
-        startDateTextView.setText(startDateText);
-        String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
-        endDateTextView.setText(endDateText);
-        String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
-        startTimeTextView.setText(startTimeText);
-        String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
-        endTimeTextView.setText(endTimeText);
+        startDateTextView.setText(CrystalGUI.getDateText(startCalendar));
+        endDateTextView.setText(CrystalGUI.getDateText(endCalendar));
+        startTimeTextView.setText(CrystalGUI.getTimeText(startCalendar));
+        endTimeTextView.setText(CrystalGUI.getTimeText(endCalendar));
 
         endDateRow.setVisibility(View.GONE);
     }
@@ -362,54 +340,7 @@ public class NewEvent extends CrystalActivity {
             @Override
             public void onClick(View v) {
                 final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.mainNewLayout);
-
-                pushNotifs = new LinearLayout(NewEvent.this);
-                pushNotifs.setOrientation(LinearLayout.VERTICAL);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                pushNotifs.setLayoutParams(layoutParams);
-
-                final LinearLayout newNotifRow = new LinearLayout(NewEvent.this);
-                newNotifRow.setOrientation(LinearLayout.HORIZONTAL);
-                newNotifRow.setLayoutParams(layoutParams);
-
-                EditText notifNumber = new EditText(NewEvent.this);
-                Spinner notifTypes = new Spinner(NewEvent.this);
-                Button deleteOption = new Button(NewEvent.this);
-
-                newNotifRow.addView(notifNumber);
-                newNotifRow.addView(notifTypes);
-                newNotifRow.addView(deleteOption);
-                pushNotifs.addView(newNotifRow);
-                mainLayout.addView(pushNotifs, mainLayout.getChildCount() - 1);
-
-                // NotifNumber Formatting
-                int leftValueInPx = (int) (getResources().getDimension(R.dimen.activity_vertical_margin) / 2.);
-                LinearLayout.LayoutParams notifNumberLayout = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 2);
-                notifNumberLayout.setMargins(leftValueInPx, 0, 0, 0);
-                notifNumber.setLayoutParams(notifNumberLayout);
-
-                notifNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-                notifNumber.setPadding(notifNumber.getPaddingLeft(), 0, notifNumber.getPaddingRight(), 0);
-                notifNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
-                notifNumber.setGravity(Gravity.CENTER);
-                notifNumber.setBackgroundResource(R.drawable.border_black);
-
-                // NotifType Formatting + Data
-                LinearLayout.LayoutParams notifTypeLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-                notifTypes.setLayoutParams(notifTypeLayout);
-
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(NewEvent.this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                notifTypes.setAdapter(adapter);
-
-                // Delete Button Formatting + Listener
-                deleteOption.setText(R.string.del);
-                deleteOption.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mainLayout.removeView(newNotifRow);
-                    }
-                });
+                CrystalGUI.generatePushNotifLayout(NewEvent.this, mainLayout);
             }
         });
     }
@@ -506,19 +437,36 @@ public class NewEvent extends CrystalActivity {
         return alarms;
     }
 
-    @Override
-    protected void setData() {
+    AlertDialog getEndBeforeStartAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewEvent.this);
 
+        builder.setMessage("The time you have entered is before your start time (" + DateFormat.getDateInstance().format(startCalendar.getTime()) + " " + DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime()) + ").");
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                TimePickerDialog endTimeSelect = new TimePickerDialog(NewEvent.this, endTimeDialogListener, endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE), false);
+                String startTimeTitle = getResources().getString(R.string.start_time);
+                if (!multipleDayCheck.isChecked()) {
+                    String startTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(startCalendar.getTime());
+                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText);
+                }
+                else {
+                    String startTimeText = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(startCalendar.getTime());
+                    String endDateTitle = getResources().getString(R.string.end_date);
+                    String endDateText = DateFormat.getDateInstance(DateFormat.MEDIUM).format(endCalendar.getTime());
+                    endTimeSelect.setTitle(startTimeTitle + "\n" + startTimeText + "\n" + endDateTitle + "\n" + endDateText);
+                }
+                endTimeSelect.show();
+            }
+        });
+
+        return builder.create();
     }
 
-    @Override
-    protected void setStaticGUI() {
-
+    protected boolean startBeforeEnd()
+    {
+        return startCalendar.before(endCalendar);
     }
 
-    @Override
-    protected void setDynamicGUI() {
 
-    }
 
 }
