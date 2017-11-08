@@ -9,7 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class MainActivity extends CrystalActivity {
     ArrayList<ArrayList<CrystalEvent>> eventList;
     boolean savedCalendarOnFile = false;
     boolean isAgendaActive = false;
+    LinearLayout focusDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,8 @@ public class MainActivity extends CrystalActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_agenda);
+
+        setScrollbar();
     }
 
 
@@ -84,13 +89,19 @@ public class MainActivity extends CrystalActivity {
         if (!isAgendaActive) {
 
             isAgendaActive = true;
+
+            // If eventList.size() == 0
+
             if (savedCalendarOnFile) {
                 LinearLayout outerLinearLayout = (LinearLayout) findViewById(R.id.mainLayout);
-                CrystalGUI.generateOuterAgendaLinearLayout(MainActivity.this, outerLinearLayout, eventList);
+                focusDate = CrystalGUI.generateOuterAgendaLinearLayout(MainActivity.this, outerLinearLayout, eventList);
+
             } else {
                 // Generate A block of code saying that a new event should be made yo!
                 Log.d("GUI Stats", "No Events!");
             }
+
+
         }
     }
 
@@ -99,6 +110,20 @@ public class MainActivity extends CrystalActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
         setSupportActionBar(myToolbar);
+    }
+
+    private void setScrollbar(){
+        ScrollView scrollView = (ScrollView) findViewById(R.id.mainScroll);
+        if (focusDate != null){
+            boolean result = scrollView.fullScroll(View.FOCUS_DOWN);
+            if (result){
+                Log.d("Scroll:", "True");
+            }
+            else{
+                Log.d("Scroll:", "False");
+            }
+
+        }
     }
 
     @Override
@@ -135,4 +160,6 @@ public class MainActivity extends CrystalActivity {
 
         }
     }
+
+
 }

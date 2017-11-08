@@ -37,12 +37,22 @@ class CrystalGUI {
     }
 
     static LinearLayout generateOuterAgendaLinearLayout(Context context, LinearLayout outerLayout, ArrayList<ArrayList<CrystalEvent>> eventList){
+        LinearLayout focus = null;
+        Calendar dateToday = Calendar.getInstance();
+        dateToday.set(dateToday.get(Calendar.YEAR), dateToday.get(Calendar.MONTH), dateToday.get(Calendar.DATE), 0, 0, 0);
+        dateToday.set(Calendar.MILLISECOND, 0);
+        dateToday.add(Calendar.DATE, 1);
 
         for (ArrayList<CrystalEvent> dateOfEvent : eventList) {
             LinearLayout innerLinearLayout = generateInnerAgendaLinearLayout(context, dateOfEvent);
             outerLayout.addView(innerLinearLayout);
+
+            Calendar checkDate = (Calendar) dateOfEvent.get(0).getStartTime().clone();
+            if (focus == null && checkDate.after(dateToday)){
+                focus = innerLinearLayout;
+            }
         }
-        return outerLayout;
+        return focus;
     }
 
     /**

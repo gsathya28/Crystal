@@ -215,6 +215,11 @@ class CrystalCalendar implements Serializable{
         return null;
     }
 
+    protected ArrayList<CrystalEvent> findDate(Calendar date){
+        // Create a dummy event
+        CrystalEvent event = new CrystalEvent(date, date, this);
+        return findDate(event);
+    }
     /**
      *
      * @return the <code>ArrayList</code> of all the events sorted by date (in <code>ArrayLists</code>)
