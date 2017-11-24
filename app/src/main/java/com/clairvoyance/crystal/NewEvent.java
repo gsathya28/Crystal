@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -53,6 +54,7 @@ public class NewEvent extends CrystalActivity {
     CrystalCalendar localCalendar;
     boolean eventInPast;
 
+    Spinner pushNotifTimeTypeSpinner;
 
     DatePickerDialog.OnDateSetListener startDateDialogListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -174,6 +176,7 @@ public class NewEvent extends CrystalActivity {
     protected void setStaticGUI() {
         setToolbar();
         setText();
+        setSpinner();
         setCheckBoxes();
         setButtons();
     }
@@ -468,4 +471,10 @@ public class NewEvent extends CrystalActivity {
         return startCalendar.before(endCalendar);
     }
 
+    protected void setSpinner() {
+        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.pushNotificationTypes);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pushNotifTimeTypeSpinner.setAdapter(adapter);
+    }
 }

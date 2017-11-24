@@ -215,6 +215,4 @@ class CrystalEvent implements Serializable {
         }
     }
 
-
-
 }

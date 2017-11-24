@@ -100,11 +100,8 @@ public class MainActivity extends CrystalActivity {
                 // Generate A block of code saying that a new event should be made yo!
                 Log.d("GUI Stats", "No Events!");
             }
-
-
         }
     }
-
 
     private void setToolbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -122,7 +119,6 @@ public class MainActivity extends CrystalActivity {
             else{
                 Log.d("Scroll:", "False");
             }
-
         }
     }
 
