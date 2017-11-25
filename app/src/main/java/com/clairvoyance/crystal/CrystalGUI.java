@@ -120,57 +120,6 @@ class CrystalGUI {
         return DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
     }
 
-    static void generatePushNotifLayout(Context context, final LinearLayout mainLayout){
-        LinearLayout pushNotifs = new LinearLayout(context);
-        pushNotifs.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        pushNotifs.setLayoutParams(layoutParams);
-
-        final LinearLayout newNotifRow = new LinearLayout(context);
-        newNotifRow.setOrientation(LinearLayout.HORIZONTAL);
-        newNotifRow.setLayoutParams(layoutParams);
-
-        EditText notifNumber = new EditText(context);
-        Spinner notifTypes = new Spinner(context);
-        Button deleteOption = new Button(context);
-
-        newNotifRow.addView(notifNumber);
-        newNotifRow.addView(notifTypes);
-        newNotifRow.addView(deleteOption);
-        pushNotifs.addView(newNotifRow);
-
-        // NotifNumber Formatting
-        int leftValueInPx = (int) (context.getResources().getDimension(R.dimen.activity_vertical_margin) / 2.);
-        LinearLayout.LayoutParams notifNumberLayout = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 2);
-        notifNumberLayout.setMargins(leftValueInPx, 0, 0, 0);
-        notifNumber.setLayoutParams(notifNumberLayout);
-
-        notifNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-        notifNumber.setPadding(notifNumber.getPaddingLeft(), 0, notifNumber.getPaddingRight(), 0);
-        notifNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
-        notifNumber.setGravity(Gravity.CENTER);
-        notifNumber.setBackgroundResource(R.drawable.border_black);
-
-        // NotifType Formatting + Data
-        LinearLayout.LayoutParams notifTypeLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-        notifTypes.setLayoutParams(notifTypeLayout);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        notifTypes.setAdapter(adapter);
-
-        // Delete Button Formatting + Listener
-        deleteOption.setText(R.string.del);
-        deleteOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainLayout.removeView(newNotifRow);
-            }
-        });
-
-        mainLayout.addView(pushNotifs, mainLayout.getChildCount() - 1);
-    }
-
     /**
      * Generates a button that will lead into an Activity holding the event info (activity_view_event.xml)
      *
