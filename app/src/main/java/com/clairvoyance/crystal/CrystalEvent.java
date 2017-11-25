@@ -3,13 +3,7 @@ package com.clairvoyance.crystal;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -41,7 +35,7 @@ class CrystalEvent implements Serializable {
      * All the fields that this class holds
      */
     final static int ALL_DAY = 0;
-    private final static int HAS_REMINDERS = 1;
+    final static int IS_REMINDER = 1;
     final static int NAME = 2;
     final static int NOTES = 3;
     final static int START_TIME = 4;
@@ -132,7 +126,7 @@ class CrystalEvent implements Serializable {
             case ALL_DAY:
                 isAllDay = value;
                 break;
-            case HAS_REMINDERS:
+            case IS_REMINDER:
                 hasReminders = value;
                 break;
         }

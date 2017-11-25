@@ -321,18 +321,17 @@ public class NewEvent extends CrystalActivity {
             public void onClick(View v) {
                 // Todo: Put on separate Thread. - Load Calendar and Insert Event
 
-                CrystalEvent newEvent = new CrystalEvent(startCalendar, endCalendar, localCalendar);
+                CrystalEvent newEvent = (reminderCheck.isChecked()) ? new CrystalReminder(startCalendar, localCalendar) : new CrystalEvent(startCalendar, endCalendar, localCalendar);
 
                 TextView eventNameTextView = (TextView) findViewById(R.id.eventName);
                 String eventName = eventNameTextView.getText().toString();
-                if (!newEvent.set(CrystalEvent.NAME, eventName))
-                {
-                    Toast.makeText(NewEvent.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-                }
+
+                newEvent.set(CrystalEvent.NAME, eventName);
 
                 String notes = ((EditText) findViewById(R.id.eventNotes)).getText().toString();
                 newEvent.set(CrystalEvent.NOTES, notes);
                 newEvent.set(CrystalEvent.ALL_DAY, allDayCheck.isChecked());
+                newEvent.set(CrystalEvent.IS_REMINDER, reminderCheck.isChecked());
                 newEvent.setAlarms(getApplicationContext(), getAlarmsFromLayout(newEvent));
 
                 localCalendar.add(newEvent, getApplicationContext());
@@ -347,7 +346,6 @@ public class NewEvent extends CrystalActivity {
         Button addNotifButton = (Button) findViewById(R.id.add_notif);
         mainLayout = (LinearLayout) findViewById(R.id.mainNewLayout);
         pushNotifs = (LinearLayout) findViewById(R.id.pushNotifs);
-        LinearLayout firstRow = (LinearLayout) findViewById(R.id.pushNotifFirstRow);
 
         addNotifButton.setOnClickListener(new View.OnClickListener() {
             @Override

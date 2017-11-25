@@ -92,7 +92,12 @@ class CrystalGUI {
         for (CrystalEvent event : dateOfEvent)
         {
             Button eventButton = generateEventButton(context, event);
-            eventButton.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.AGENDA_VIEW) + " - " + event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.AGENDA_VIEW) + ": " + event.get(CrystalEvent.NAME));
+            if (event instanceof CrystalReminder) {
+                eventButton.setText("Reminder - " + event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.AGENDA_VIEW) + ": " + event.get(CrystalEvent.NAME));
+            }
+            else {
+                eventButton.setText(event.displayTimeString(CrystalEvent.START_TIME, CrystalEvent.AGENDA_VIEW) + " - " + event.displayTimeString(CrystalEvent.END_TIME, CrystalEvent.AGENDA_VIEW) + ": " + event.get(CrystalEvent.NAME));
+            }
             innerLinearLayout.addView(eventButton);
         }
 
