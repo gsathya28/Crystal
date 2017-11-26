@@ -15,7 +15,7 @@ import android.widget.TextView;
 public class ViewEvent extends CrystalActivity {
 
     CrystalCalendar localCalendar;
-    CrystalEvent event;
+    CrystalInstant event;
     Button deleteButton;
     Button editButton;
     Button pushButton;
@@ -28,7 +28,7 @@ public class ViewEvent extends CrystalActivity {
         localCalendar = CrystalCalendar.read(ViewEvent.this);
 
         Intent viewEventIntent = getIntent();
-        event = (CrystalEvent) viewEventIntent.getSerializableExtra("Event");
+        event = (CrystalInstant) viewEventIntent.getSerializableExtra("Event");
 
         setToolbar();
         setText();

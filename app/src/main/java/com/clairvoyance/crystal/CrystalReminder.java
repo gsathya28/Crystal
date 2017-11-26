@@ -1,21 +1,23 @@
 package com.clairvoyance.crystal;
 
+import android.content.Context;
+
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by Sathya on 11/15/2017.
+ * Created by Sathya on 11/15/2017. HI!
  */
 
-public class CrystalReminder extends CrystalEvent {
+class CrystalReminder implements CrystalInstant {
 
     private Calendar time;
-    public CrystalReminder(Calendar inTime, CrystalCalendar localCalendar){
-        super(inTime, null, localCalendar);
+    CrystalReminder(Calendar inTime){
         time = inTime;
     }
 
-    String displayTimeString(int field, int activity) {
+    public String displayTimeString(int field, int activity) {
         String finalString;
         switch (activity) {
             case VIEW_EVENT:
@@ -35,6 +37,37 @@ public class CrystalReminder extends CrystalEvent {
         }
 
         return "";
+    }
+
+    public void setAlarms(Context context, ArrayList<CrystalAlarm> alarms){
+
+    }
+
+    public void setStartNotificationIntent(Context context){
+
+    }
+
+    public boolean set(int field, String string){
+        return true;
+    }
+
+    public void set(int field, boolean value){
+
+    }
+
+    public Calendar getStartTime(){
+        return time;
+    }
+
+    public String get(int field)
+    {
+        return "";
+    }
+
+    public Calendar getEndTime(){
+        Calendar calendar = (Calendar) time.clone();
+        calendar.add(Calendar.HOUR, 1);
+        return calendar ;
     }
 
 }

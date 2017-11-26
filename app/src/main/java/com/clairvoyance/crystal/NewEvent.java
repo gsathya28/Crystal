@@ -321,7 +321,7 @@ public class NewEvent extends CrystalActivity {
             public void onClick(View v) {
                 // Todo: Put on separate Thread. - Load Calendar and Insert Event
 
-                CrystalEvent newEvent = (reminderCheck.isChecked()) ? new CrystalReminder(startCalendar, localCalendar) : new CrystalEvent(startCalendar, endCalendar, localCalendar);
+                CrystalInstant newEvent = (reminderCheck.isChecked()) ? new CrystalReminder(startCalendar) : new CrystalEvent(startCalendar, endCalendar, localCalendar);
 
                 TextView eventNameTextView = (TextView) findViewById(R.id.eventName);
                 String eventName = eventNameTextView.getText().toString();
@@ -472,7 +472,7 @@ public class NewEvent extends CrystalActivity {
 
     }
 
-    private ArrayList<CrystalAlarm> getAlarmsFromLayout(CrystalEvent event){
+    private ArrayList<CrystalAlarm> getAlarmsFromLayout(CrystalInstant event){
         ArrayList<CrystalAlarm> alarms = new ArrayList<>();
 
 

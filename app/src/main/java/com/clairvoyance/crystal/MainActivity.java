@@ -21,7 +21,7 @@ public class MainActivity extends CrystalActivity {
 
     private TextView mTextMessage;
     CrystalCalendar localCalendar;
-    ArrayList<ArrayList<CrystalEvent>> eventList;
+    ArrayList<ArrayList<CrystalInstant>> eventList;
     boolean savedCalendarOnFile = false;
     boolean isAgendaActive = false;
     LinearLayout focusDate;

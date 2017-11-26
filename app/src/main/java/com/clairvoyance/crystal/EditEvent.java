@@ -53,7 +53,7 @@ public class EditEvent extends CrystalActivity {
     Spinner pushNotifTimeTypeSpinner;
 
     CrystalCalendar localCalendar;
-    CrystalEvent eventEdited;
+    CrystalInstant eventEdited;
     boolean eventInPast;
 
 
@@ -161,7 +161,7 @@ public class EditEvent extends CrystalActivity {
         Log.d("Calendar Stats", "Calendar Created not Written");
         localCalendar = CrystalCalendar.read(this);
 
-        eventEdited = (CrystalEvent) getIntent().getSerializableExtra("Event");
+        eventEdited = (CrystalInstant) getIntent().getSerializableExtra("Event");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
@@ -178,7 +178,7 @@ public class EditEvent extends CrystalActivity {
         // Toolbar Setup
         Toolbar myToolbar = (Toolbar) findViewById(R.id.editToolbar);
         myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        myToolbar.setTitle(eventEdited.get(CrystalEvent.NAME));
+        myToolbar.setTitle(eventEdited.get(CrystalInstant.NAME));
         setSupportActionBar(myToolbar);
 
         // Get a support ActionBar corresponding to this toolbar

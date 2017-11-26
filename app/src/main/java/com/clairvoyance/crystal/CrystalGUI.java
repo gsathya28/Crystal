@@ -36,14 +36,14 @@ class CrystalGUI {
 
     }
 
-    static LinearLayout generateOuterAgendaLinearLayout(Context context, LinearLayout outerLayout, ArrayList<ArrayList<CrystalEvent>> eventList){
+    static LinearLayout generateOuterAgendaLinearLayout(Context context, LinearLayout outerLayout, ArrayList<ArrayList<CrystalInstant>> eventList){
         LinearLayout focus = null;
         Calendar dateToday = Calendar.getInstance();
         dateToday.set(dateToday.get(Calendar.YEAR), dateToday.get(Calendar.MONTH), dateToday.get(Calendar.DATE), 0, 0, 0);
         dateToday.set(Calendar.MILLISECOND, 0);
         dateToday.add(Calendar.DATE, 1);
 
-        for (ArrayList<CrystalEvent> dateOfEvent : eventList) {
+        for (ArrayList<CrystalInstant> dateOfEvent : eventList) {
             LinearLayout innerLinearLayout = generateInnerAgendaLinearLayout(context, dateOfEvent);
             outerLayout.addView(innerLinearLayout);
 
@@ -62,7 +62,7 @@ class CrystalGUI {
      * @param dateOfEvent the date of the <code>ArrayList</code> of events.
      * @return a <code>LinearLayout</code> with all the events on a certain date.
      */
-    private static LinearLayout generateInnerAgendaLinearLayout(Context context, ArrayList<CrystalEvent> dateOfEvent){
+    private static LinearLayout generateInnerAgendaLinearLayout(Context context, ArrayList<CrystalInstant> dateOfEvent){
 
         LinearLayout innerLinearLayout = new LinearLayout(context);
         innerLinearLayout.setOrientation(LinearLayout.VERTICAL);
@@ -89,7 +89,7 @@ class CrystalGUI {
 
         innerLinearLayout.addView(dateTextView);
 
-        for (CrystalEvent event : dateOfEvent)
+        for (CrystalInstant event : dateOfEvent)
         {
             Button eventButton = generateEventButton(context, event);
             if (event instanceof CrystalReminder) {
@@ -131,7 +131,7 @@ class CrystalGUI {
      * @param context the context the button will be generated in
      * @return a <code>Button</code> with all layout parameters for the Agenda view.
      */
-    private static Button generateEventButton(final Context context, CrystalEvent event){
+    private static Button generateEventButton(final Context context, CrystalInstant event){
         Button eventButton = new Button(context);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -173,7 +173,7 @@ class CrystalGUI {
                 eventButton.getPaddingBottom() - topPaddingAdjustment
         );
 
-        final CrystalEvent buttonEvent = event;
+        final CrystalInstant buttonEvent = event;
 
         eventButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -29,7 +29,7 @@ class CrystalCalendar implements Serializable{
      * All the values this class holds
      */
     private String userid;
-    private ArrayList<ArrayList<CrystalEvent>> crystalEvents = new ArrayList<>();
+    private ArrayList<ArrayList<CrystalInstant>> crystalEvents = new ArrayList<>();
     int eventCount = 0;
 
     /**
@@ -88,7 +88,7 @@ class CrystalCalendar implements Serializable{
      *
      * @param event the event to be added
      */
-    void add(CrystalEvent event, Context context)
+    void add(CrystalInstant event, Context context)
     {
         event.setStartNotificationIntent(context);
         // Todo: Add based on start Date - for check
@@ -96,7 +96,7 @@ class CrystalCalendar implements Serializable{
         // If empty, just add the event in a new date group
         if (crystalEvents.isEmpty())
         {
-            ArrayList<CrystalEvent> newDateList = new ArrayList<>();
+            ArrayList<CrystalInstant> newDateList = new ArrayList<>();
             newDateList.add(event);
             crystalEvents.add(newDateList);
             return;
@@ -109,10 +109,10 @@ class CrystalCalendar implements Serializable{
         strippedStartCalendar.set(Calendar.MILLISECOND, 0);
 
         // Find the date group we need.
-        ArrayList<CrystalEvent> realDateList = findDate(event);
+        ArrayList<CrystalInstant> realDateList = findDate(event);
         // If the date group is found:
         if (realDateList != null) {
-            for (CrystalEvent dateEvent : realDateList)
+            for (CrystalInstant dateEvent : realDateList)
             {
                 if (dateEvent.getStartTime().getTimeInMillis() >= startCalendar.getTimeInMillis())
                 {
@@ -123,10 +123,10 @@ class CrystalCalendar implements Serializable{
             realDateList.add(event);
         }
         else { // If it isn't found
-            ArrayList<CrystalEvent> newDateList = new ArrayList<>();
+            ArrayList<CrystalInstant> newDateList = new ArrayList<>();
             newDateList.add(event);
 
-            for (ArrayList<CrystalEvent> dateList : crystalEvents) {
+            for (ArrayList<CrystalInstant> dateList : crystalEvents) {
                 Calendar date = dateList.get(0).getStartTime();
                 Calendar strippedDate = (Calendar) date.clone();
                 strippedDate.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DATE), 0, 0, 0);
@@ -148,18 +148,18 @@ class CrystalCalendar implements Serializable{
      * @param event the event to be deleted
      * @return boolean regarding the success of the removal
      */
-    boolean remove(CrystalEvent event)
+    boolean remove(CrystalInstant event)
     {
-        ArrayList<CrystalEvent> dateList = findDate(event);
+        ArrayList<CrystalInstant> dateList = findDate(event);
         if (dateList != null) {
 
             int index = crystalEvents.indexOf(dateList);
             crystalEvents.remove(dateList);
-            Iterator<CrystalEvent> i = dateList.iterator();
+            Iterator<CrystalInstant> i = dateList.iterator();
 
             while (i.hasNext())
             {
-                CrystalEvent eventCheck = i.next();
+                CrystalInstant eventCheck = i.next();
                 if(eventCheck.get(CrystalEvent.ID).equals(event.get(CrystalEvent.ID)))
                 {
                     i.remove();
@@ -192,14 +192,14 @@ class CrystalCalendar implements Serializable{
      * @return <code>ArrayList</code> if there are events with same date as the event passed in, <code>null</code> if no events with the same date are found
      */
     @Nullable
-    private ArrayList<CrystalEvent> findDate(CrystalEvent event)
+    private ArrayList<CrystalInstant> findDate(CrystalInstant event)
     {
         Calendar startCalendar = event.getStartTime();
         Calendar strippedStartCalendar = (Calendar) startCalendar.clone();
         strippedStartCalendar.set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DATE), 0, 0, 0);
         strippedStartCalendar.set(Calendar.MILLISECOND, 0);
 
-        for (ArrayList<CrystalEvent> dateList : crystalEvents)
+        for (ArrayList<CrystalInstant> dateList : crystalEvents)
         {
             Calendar date = dateList.get(0).getStartTime();
             Calendar strippedDate = (Calendar) date.clone();
@@ -215,16 +215,16 @@ class CrystalCalendar implements Serializable{
         return null;
     }
 
-    protected ArrayList<CrystalEvent> findDate(Calendar date){
+    protected ArrayList<CrystalInstant> findDate(Calendar date){
         // Create a dummy event
-        CrystalEvent event = new CrystalEvent(date, date, this);
+        CrystalInstant event = new CrystalEvent(date, date, this);
         return findDate(event);
     }
     /**
      *
      * @return the <code>ArrayList</code> of all the events sorted by date (in <code>ArrayLists</code>)
      */
-    ArrayList<ArrayList<CrystalEvent>> getEvents()
+    ArrayList<ArrayList<CrystalInstant>> getEvents()
     {
         return crystalEvents;
     }

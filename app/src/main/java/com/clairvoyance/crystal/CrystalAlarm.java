@@ -33,7 +33,7 @@ class CrystalAlarm implements Serializable {
         alarmTime = time;
     }
 
-    void setOffsetText(CrystalEvent event, int offset, String type) {
+    void setOffsetText(CrystalInstant event, int offset, String type) {
         String rightType = type;
         if (offset == 1)
             rightType = type.substring(0, type.length() - 1);

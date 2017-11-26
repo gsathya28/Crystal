@@ -17,7 +17,7 @@ import java.util.Calendar;
  * for handling an event within a calendar.
  */
 
-class CrystalEvent implements Serializable {
+class CrystalEvent implements Serializable, CrystalInstant {
 
     /**
      * All the values that this class holds
@@ -25,7 +25,6 @@ class CrystalEvent implements Serializable {
     private Calendar startTime;
     private Calendar endTime;
     private boolean isAllDay = false;
-    private boolean hasReminders = false;
     private String name = "Untitled Event";
     private String notes = "";
     private String id;
@@ -34,15 +33,7 @@ class CrystalEvent implements Serializable {
     /**
      * All the fields that this class holds
      */
-    final static int ALL_DAY = 0;
-    final static int IS_REMINDER = 1;
-    final static int NAME = 2;
-    final static int NOTES = 3;
-    final static int START_TIME = 4;
-    final static int END_TIME = 5;
-    final static int ID = 6;
-    final static int AGENDA_VIEW = 7;
-    final static int VIEW_EVENT = 8;
+
 
     /**
      *
@@ -63,7 +54,7 @@ class CrystalEvent implements Serializable {
      *
      * @return the <code>Calendar</code> representing the start time
      */
-    Calendar getStartTime()
+    public Calendar getStartTime()
     {
         return startTime;
     }
@@ -72,7 +63,7 @@ class CrystalEvent implements Serializable {
      *
      * @return the <code>Calendar</code> representing the end time
      */
-    Calendar getEndTime() { return endTime; }
+    public Calendar getEndTime() { return endTime; }
 
     /**
      * Displays times in a String Format using <code>DateFormat</code>
@@ -81,7 +72,7 @@ class CrystalEvent implements Serializable {
      * @param activity the activity in which it should be displayed in.
      * @return the time in a String.
      */
-    String displayTimeString(int field, int activity)
+    public String displayTimeString(int field, int activity)
     {
         String finalString;
         switch (activity)
@@ -119,15 +110,12 @@ class CrystalEvent implements Serializable {
      * @param field the variable to be changed
      * @param value the value it needs to be changed to
      */
-    void set(int field, boolean value)
+    public void set(int field, boolean value)
     {
         switch (field)
         {
             case ALL_DAY:
                 isAllDay = value;
-                break;
-            case IS_REMINDER:
-                hasReminders = value;
                 break;
         }
     }
@@ -139,7 +127,7 @@ class CrystalEvent implements Serializable {
      * @param value the value it needs to be changed to
      * @return a boolean regarding the success of the change
      */
-    boolean set(int field, String value)
+    public boolean set(int field, String value)
     {
         if(!value.equals("")) {
             switch (field) {
@@ -160,7 +148,7 @@ class CrystalEvent implements Serializable {
      * @param field - the String variable requested
      * @return - the String value
      */
-    String get(int field)
+    public String get(int field)
     {
         switch (field)
         {
@@ -183,16 +171,7 @@ class CrystalEvent implements Serializable {
         return isAllDay;
     }
 
-    /**
-     *
-     * @return whether the event has any reminders before the event starts.
-     */
-    boolean hasReminders()
-    {
-        return hasReminders;
-    }
-
-    void setStartNotificationIntent(Context context) {
+    public void setStartNotificationIntent(Context context) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, NotificationPublisher.START);
         notificationIntent.putExtra(NotificationPublisher.NAME, name);
@@ -202,7 +181,7 @@ class CrystalEvent implements Serializable {
         NotificationPublisher.scheduleNotification(context, startTime, pendingIntent);
     }
 
-    void setAlarms(Context context, ArrayList<CrystalAlarm> crystalAlarms){
+    public void setAlarms(Context context, ArrayList<CrystalAlarm> crystalAlarms){
         alarms = crystalAlarms;
         for (CrystalAlarm alarm: alarms) {
             alarm.setNotificationIntent(context);
