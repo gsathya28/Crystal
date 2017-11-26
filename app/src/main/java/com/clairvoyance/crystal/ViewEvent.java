@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ViewEvent extends CrystalActivity {
+public class ViewEvent extends AppCompatActivity {
 
     CrystalCalendar localCalendar;
     CrystalInstant event;
@@ -111,20 +112,4 @@ public class ViewEvent extends CrystalActivity {
             }
         });
     }
-
-    @Override
-    protected void setData() {
-
-    }
-
-    @Override
-    protected void setStaticGUI() {
-
-    }
-
-    @Override
-    protected void setDynamicGUI() {
-
-    }
-
 }

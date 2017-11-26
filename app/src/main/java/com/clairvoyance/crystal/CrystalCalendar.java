@@ -46,9 +46,8 @@ class CrystalCalendar implements Serializable{
      * Saves the calendar data in the internal storage - filename: localCalendar.txt (will change)
      *
      * @param context the <code>Context</code> in which the save is being done in, so internal storage writing permissions are given
-     * @return boolean regarding the success of the save
      */
-    boolean save(Context context)
+    void save(Context context)
     {
         try {
             FileOutputStream fOut = context.openFileOutput(userid, Context.MODE_PRIVATE);
@@ -56,9 +55,7 @@ class CrystalCalendar implements Serializable{
             fOut.close();
         } catch (IOException i) {
             Log.d("Save Error: ", i.getMessage());
-            return false;
         }
-        return true;
     }
 
     /**
@@ -215,11 +212,7 @@ class CrystalCalendar implements Serializable{
         return null;
     }
 
-    protected ArrayList<CrystalInstant> findDate(Calendar date){
-        // Create a dummy event
-        CrystalInstant event = new CrystalEvent(date, date, this);
-        return findDate(event);
-    }
+
     /**
      *
      * @return the <code>ArrayList</code> of all the events sorted by date (in <code>ArrayLists</code>)

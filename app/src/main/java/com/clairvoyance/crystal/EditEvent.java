@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
@@ -30,7 +31,7 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class EditEvent extends CrystalActivity {
+public class EditEvent extends AppCompatActivity {
 
     Calendar startCalendar;
     Calendar endCalendar;
@@ -468,18 +469,4 @@ public class EditEvent extends CrystalActivity {
         return startCalendar.before(endCalendar);
     }
 
-    @Override
-    protected void setData() {
-
-    }
-
-    @Override
-    protected void setStaticGUI() {
-
-    }
-
-    @Override
-    protected void setDynamicGUI() {
-
-    }
 }

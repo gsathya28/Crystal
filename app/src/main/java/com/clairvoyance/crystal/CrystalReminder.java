@@ -39,12 +39,14 @@ class CrystalReminder implements CrystalInstant {
         return "";
     }
 
-    public void setAlarms(Context context, ArrayList<CrystalAlarm> alarms){
-
+    public Calendar getStartTime(){
+        return time;
     }
 
-    public void setStartNotificationIntent(Context context){
-
+    public Calendar getEndTime(){
+        Calendar calendar = (Calendar) time.clone();
+        calendar.add(Calendar.HOUR, 1);
+        return calendar ;
     }
 
     public boolean set(int field, String string){
@@ -55,19 +57,18 @@ class CrystalReminder implements CrystalInstant {
 
     }
 
-    public Calendar getStartTime(){
-        return time;
-    }
-
     public String get(int field)
     {
         return "";
     }
 
-    public Calendar getEndTime(){
-        Calendar calendar = (Calendar) time.clone();
-        calendar.add(Calendar.HOUR, 1);
-        return calendar ;
+    public void setAlarms(Context context, ArrayList<CrystalAlarm> alarms){
+
     }
+
+    public void setStartNotificationIntent(Context context){
+
+    }
+
 
 }

@@ -5,17 +5,12 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -30,11 +25,7 @@ import java.util.Calendar;
 class CrystalGUI {
 
     private final static int LAYOUT = 0;
-    final static int FONT = 1;
-
-    public CrystalGUI() {
-
-    }
+    private final static int FONT = 1;
 
     static LinearLayout generateOuterAgendaLinearLayout(Context context, LinearLayout outerLayout, ArrayList<ArrayList<CrystalInstant>> eventList){
         LinearLayout focus = null;
@@ -105,7 +96,7 @@ class CrystalGUI {
 
     }
 
-    static int getFontSizeInPx(Context context, int value, int type) {
+    private static int getFontSizeInPx(Context context, int value, int type) {
         Resources r = context.getResources();
         switch (type){
             case FONT:

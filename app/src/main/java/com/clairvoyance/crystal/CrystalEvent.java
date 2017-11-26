@@ -31,11 +31,6 @@ class CrystalEvent implements Serializable, CrystalInstant {
     private ArrayList<CrystalAlarm> alarms;
 
     /**
-     * All the fields that this class holds
-     */
-
-
-    /**
      *
      * Constructs an event with the specified start and end time and the calendar it is saved in.
      *

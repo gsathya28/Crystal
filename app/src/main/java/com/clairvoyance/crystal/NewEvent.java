@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
@@ -25,7 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.CheckBox;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import java.util.Calendar;
 
 // Todo: Fix DatePicker so that the user can pick the current date as an option.
 
-public class NewEvent extends CrystalActivity {
+public class NewEvent extends AppCompatActivity {
 
     Calendar startCalendar;
     Calendar endCalendar;
@@ -167,28 +167,12 @@ public class NewEvent extends CrystalActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
 
-        setData();
-        setStaticGUI();
-        setDynamicGUI();
-    }
-
-    @Override
-    protected void setData() {
         setCalendars();
-    }
-
-    @Override
-    protected void setStaticGUI() {
         setToolbar();
         setText();
         setSpinner();
         setCheckBoxes();
         setButtons();
-    }
-
-    @Override
-    protected void setDynamicGUI() {
-
     }
 
     protected void setCalendars() {
@@ -225,7 +209,6 @@ public class NewEvent extends CrystalActivity {
         endCalendar.add(Calendar.HOUR_OF_DAY, 1);
 
     }
-
 
     protected void setToolbar() {
         // Toolbar Setup
@@ -270,6 +253,82 @@ public class NewEvent extends CrystalActivity {
         endTimeTextView.setText(CrystalGUI.getTimeText(endCalendar));
 
         endDateRow.setVisibility(View.GONE);
+    }
+
+    protected void setSpinner() {
+        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.pushNotificationTypes);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pushNotifTimeTypeSpinner.setAdapter(adapter);
+    }
+
+    protected void setCheckBoxes() {
+        reminderCheck = (CheckBox) findViewById(R.id.reminderCheckBox);
+        allDayCheck = (CheckBox) findViewById(R.id.allDayCheckBox);
+        multipleDayCheck = (CheckBox) findViewById(R.id.multipleDayCheckBox);
+
+        reminderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    allDayCheck.setChecked(false);
+                    multipleDayCheck.setChecked(false);
+                    endTimeRow.setVisibility(View.GONE);
+                    startTimeTitleView.setText(R.string.time);
+                    startTimeRow.setVisibility(View.VISIBLE);
+                }
+                else {
+                    endTimeRow.setVisibility(View.VISIBLE);
+                    startTimeTitleView.setText(R.string.start_time);
+                }
+            }
+        });
+        allDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    reminderCheck.setChecked(false);
+                    startTimeRow.setVisibility(View.GONE);
+                    endTimeRow.setVisibility(View.GONE);
+                }
+                else {
+                    startTimeRow.setVisibility(View.VISIBLE);
+                    endTimeRow.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        multipleDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    reminderCheck.setChecked(false);
+                    startDateTitleView.setText(R.string.start_date);
+                    endDateRow.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    startDateTitleView.setText(R.string.date);
+                    endDateRow.setVisibility(View.GONE);
+                    endCalendar = (Calendar) startCalendar.clone();
+                    endCalendar.add(Calendar.HOUR_OF_DAY, 1);
+
+                    String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
+                    endDateTextView.setText(endDateText);
+                    String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
+                    endTimeTextView.setText(endTimeText);
+                }
+            }
+        });
+
+        Calendar checkCalendar = Calendar.getInstance();
+        checkCalendar.set(Calendar.HOUR_OF_DAY, 23);
+        if (startCalendar.get(Calendar.HOUR_OF_DAY) == checkCalendar.get(Calendar.HOUR_OF_DAY))
+        {
+            multipleDayCheck.setChecked(true);
+        }
+
     }
 
     protected void setButtons() {
@@ -403,74 +462,6 @@ public class NewEvent extends CrystalActivity {
     /* Todo: Make sure all the calendars are modified when the checkboxes are checked/unchecked
             Not just the textViews
     */
-    public void setCheckBoxes() {
-        reminderCheck = (CheckBox) findViewById(R.id.reminderCheckBox);
-        allDayCheck = (CheckBox) findViewById(R.id.allDayCheckBox);
-        multipleDayCheck = (CheckBox) findViewById(R.id.multipleDayCheckBox);
-
-        reminderCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    allDayCheck.setChecked(false);
-                    multipleDayCheck.setChecked(false);
-                    endTimeRow.setVisibility(View.GONE);
-                    startTimeTitleView.setText(R.string.time);
-                    startTimeRow.setVisibility(View.VISIBLE);
-                }
-                else {
-                    endTimeRow.setVisibility(View.VISIBLE);
-                    startTimeTitleView.setText(R.string.start_time);
-                }
-            }
-        });
-        allDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    reminderCheck.setChecked(false);
-                    startTimeRow.setVisibility(View.GONE);
-                    endTimeRow.setVisibility(View.GONE);
-                }
-                else {
-                    startTimeRow.setVisibility(View.VISIBLE);
-                    endTimeRow.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        multipleDayCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    reminderCheck.setChecked(false);
-                    startDateTitleView.setText(R.string.start_date);
-                    endDateRow.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    startDateTitleView.setText(R.string.date);
-                    endDateRow.setVisibility(View.GONE);
-                    endCalendar = (Calendar) startCalendar.clone();
-                    endCalendar.add(Calendar.HOUR_OF_DAY, 1);
-
-                    String endDateText = DateFormat.getDateInstance().format(endCalendar.getTime());
-                    endDateTextView.setText(endDateText);
-                    String endTimeText = DateFormat.getTimeInstance(DateFormat.SHORT).format(endCalendar.getTime());
-                    endTimeTextView.setText(endTimeText);
-                }
-            }
-        });
-
-        Calendar checkCalendar = Calendar.getInstance();
-        checkCalendar.set(Calendar.HOUR_OF_DAY, 23);
-        if (startCalendar.get(Calendar.HOUR_OF_DAY) == checkCalendar.get(Calendar.HOUR_OF_DAY))
-        {
-            multipleDayCheck.setChecked(true);
-        }
-
-    }
 
     private ArrayList<CrystalAlarm> getAlarmsFromLayout(CrystalInstant event){
         ArrayList<CrystalAlarm> alarms = new ArrayList<>();
@@ -524,10 +515,5 @@ public class NewEvent extends CrystalActivity {
         return startCalendar.before(endCalendar);
     }
 
-    protected void setSpinner() {
-        pushNotifTimeTypeSpinner = (Spinner) findViewById(R.id.pushNotificationTypes);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.timeMeasureOptions, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        pushNotifTimeTypeSpinner.setAdapter(adapter);
-    }
+
 }

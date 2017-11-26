@@ -52,8 +52,7 @@ class CrystalAlarm implements Serializable {
         NotificationPublisher.scheduleNotification(context, alarmTime, pendingIntent);
     }
 
-    static Calendar offsetCalendar(Calendar calendar, int offset, String type)
-    {
+    static Calendar offsetCalendar(Calendar calendar, int offset, String type) {
         Calendar offsetCalendar = (Calendar) calendar.clone();
         switch (type){
             case "minutes":

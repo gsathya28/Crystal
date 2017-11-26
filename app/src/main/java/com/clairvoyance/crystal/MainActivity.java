@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -17,7 +18,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 // Todo: Fix Back Button Problems
-public class MainActivity extends CrystalActivity {
+public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     CrystalCalendar localCalendar;
@@ -32,13 +33,13 @@ public class MainActivity extends CrystalActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setData();
-        setStaticGUI();
-        setDynamicGUI();
+        setCalendars();
+        setToolbar();
+        setBottomBar();
+        setScrollbar();
     }
 
-    @Override
-    protected void setData() {
+    protected void setCalendars() {
         // Todo: Put this on separate Thread
 
         // Check for saved calendar
@@ -48,13 +49,13 @@ public class MainActivity extends CrystalActivity {
         savedCalendarOnFile = !(eventList.isEmpty());
     }
 
-    @Override
-    protected void setStaticGUI() {
-        setToolbar();
+    private void setToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+        setSupportActionBar(myToolbar);
     }
 
-    @Override
-    protected void setDynamicGUI() {
+    protected void setBottomBar() {
         BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
                 = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -80,10 +81,20 @@ public class MainActivity extends CrystalActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setSelectedItemId(R.id.navigation_agenda);
-
-        setScrollbar();
     }
 
+    private void setScrollbar(){
+        ScrollView scrollView = (ScrollView) findViewById(R.id.mainScroll);
+        if (focusDate != null){
+            boolean result = scrollView.fullScroll(View.FOCUS_DOWN);
+            if (result){
+                Log.d("Scroll:", "True");
+            }
+            else{
+                Log.d("Scroll:", "False");
+            }
+        }
+    }
 
     private void createAgenda() {
         if (!isAgendaActive) {
@@ -99,25 +110,6 @@ public class MainActivity extends CrystalActivity {
             } else {
                 // Generate A block of code saying that a new event should be made yo!
                 Log.d("GUI Stats", "No Events!");
-            }
-        }
-    }
-
-    private void setToolbar() {
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
-        setSupportActionBar(myToolbar);
-    }
-
-    private void setScrollbar(){
-        ScrollView scrollView = (ScrollView) findViewById(R.id.mainScroll);
-        if (focusDate != null){
-            boolean result = scrollView.fullScroll(View.FOCUS_DOWN);
-            if (result){
-                Log.d("Scroll:", "True");
-            }
-            else{
-                Log.d("Scroll:", "False");
             }
         }
     }
