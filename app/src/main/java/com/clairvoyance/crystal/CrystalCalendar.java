@@ -43,44 +43,6 @@ class CrystalCalendar implements Serializable{
     }
 
     /**
-     * Saves the calendar data in the internal storage - filename: localCalendar.txt (will change)
-     *
-     * @param context the <code>Context</code> in which the save is being done in, so internal storage writing permissions are given
-     */
-    void save(Context context)
-    {
-        try {
-            FileOutputStream fOut = context.openFileOutput(userid, Context.MODE_PRIVATE);
-            fOut.write(Serializer.serialize(this));
-            fOut.close();
-        } catch (IOException i) {
-            Log.d("Save Error: ", i.getMessage());
-        }
-    }
-
-    /**
-     * Reads the calendar data from the internal storage - filename: localCalendar.txt
-     *
-     * @param context the <code>Context</code> in which the read is being done in, so internal storage writing permissions are given
-     * @return <code>CrystalCalendar</code> object with data read from localCalendar.txt
-     */
-    static CrystalCalendar read(Context context)
-    {
-        CrystalCalendar calendar = new CrystalCalendar(Build.ID + "@clairvoyance.com");
-        try {
-            FileInputStream fIn = context.openFileInput(calendar.userid);
-            byte[] byteHolder = new byte[fIn.available()];
-            int x = fIn.read(byteHolder);
-            if (x != -1)
-                calendar = (CrystalCalendar) Serializer.deserialize(byteHolder);
-        } catch (IOException|ClassNotFoundException i)
-        {
-            Log.d("Read Error: ", i.getMessage());
-        }
-        return calendar;
-    }
-
-    /**
      * Adds an event to the list of events in the calendar sorted by date of the start time
      *
      * @param event the event to be added

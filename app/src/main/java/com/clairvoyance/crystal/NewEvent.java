@@ -56,6 +56,7 @@ public class NewEvent extends AppCompatActivity {
     CheckBox allDayCheck;
     CheckBox multipleDayCheck;
 
+    CrystalData mainData;
     CrystalCalendar localCalendar;
     boolean eventInPast;
 
@@ -162,7 +163,8 @@ public class NewEvent extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Setup Local Calendar
-        localCalendar = (CrystalCalendar) getIntent().getSerializableExtra("Local_Calendar");
+        mainData = CrystalData.read(this);
+        localCalendar = mainData.getMainCalendar();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
@@ -394,7 +396,7 @@ public class NewEvent extends AppCompatActivity {
                 newEvent.setAlarms(getApplicationContext(), getAlarmsFromLayout(newEvent));
 
                 localCalendar.add(newEvent, getApplicationContext());
-                localCalendar.save(NewEvent.this);
+                mainData.save(NewEvent.this);
 
                 Intent eventCreated = new Intent(getApplicationContext(), MainActivity.class);
                 eventCreated.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

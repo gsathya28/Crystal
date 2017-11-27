@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 public class ViewEvent extends AppCompatActivity {
 
+    CrystalData mainData;
     CrystalCalendar localCalendar;
     CrystalInstant event;
     Button deleteButton;
@@ -26,7 +27,8 @@ public class ViewEvent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-        localCalendar = CrystalCalendar.read(ViewEvent.this);
+        mainData = CrystalData.read(this);
+        localCalendar = mainData.getMainCalendar();
 
         Intent viewEventIntent = getIntent();
         event = (CrystalInstant) viewEventIntent.getSerializableExtra("Event");
@@ -94,7 +96,7 @@ public class ViewEvent extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         localCalendar.remove(event);
-                        localCalendar.save(ViewEvent.this);
+                        mainData.save(ViewEvent.this);
                         Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(mainActivityIntent);
 

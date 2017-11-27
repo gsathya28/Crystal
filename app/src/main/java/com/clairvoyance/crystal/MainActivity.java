@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Check for saved calendar
         Log.d("Calendar Stats", "Calendar Created not Written");
-        localCalendar = CrystalCalendar.read(this);
+        CrystalData mainData = CrystalData.read(this);
+        localCalendar = mainData.getMainCalendar();
         eventList = localCalendar.getEvents();
         savedCalendarOnFile = !(eventList.isEmpty());
     }

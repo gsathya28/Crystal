@@ -54,6 +54,7 @@ public class EditEvent extends AppCompatActivity {
     Spinner pushNotifTimeTypeSpinner;
 
     CrystalCalendar localCalendar;
+    CrystalData mainData;
     CrystalInstant eventEdited;
     boolean eventInPast;
 
@@ -160,7 +161,8 @@ public class EditEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // Setup Local Calendar
         Log.d("Calendar Stats", "Calendar Created not Written");
-        localCalendar = CrystalCalendar.read(this);
+        mainData = CrystalData.read(this);
+        localCalendar = mainData.getMainCalendar();
 
         eventEdited = (CrystalInstant) getIntent().getSerializableExtra("Event");
 
@@ -378,7 +380,7 @@ public class EditEvent extends AppCompatActivity {
 
                 localCalendar.add(EditEvent, getApplicationContext());
                 // Don't save unless the new event has been placed in
-                localCalendar.save(EditEvent.this);
+                mainData.save(EditEvent.this);
 
                 Intent localSave = new Intent(getApplicationContext(), ViewEvent.class);
                 localSave.putExtra("Event", EditEvent);
