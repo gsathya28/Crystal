@@ -1,13 +1,8 @@
 package com.clairvoyance.crystal;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,18 +23,15 @@ class CrystalCalendar implements Serializable{
     /**
      * All the values this class holds
      */
-    private String userid;
     private ArrayList<ArrayList<CrystalInstant>> crystalEvents = new ArrayList<>();
     int eventCount = 0;
 
     /**
      * A constructor that only requires an id.
      *
-     * @param id - an id to distinguish this localCalendar from other calendars
      */
-    private CrystalCalendar(String id)
-    {
-        userid = id;
+    CrystalCalendar() {
+
     }
 
     /**

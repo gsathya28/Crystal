@@ -16,7 +16,7 @@ import java.io.Serializable;
 class CrystalData implements Serializable {
 
     private String userid;
-    private CrystalCalendar mainCalendar;
+    private CrystalCalendar mainCalendar = new CrystalCalendar();
     private CrystalData(String id) {userid = id;}
 
     void save(Context context){
