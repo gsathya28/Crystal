@@ -166,6 +166,10 @@ class CrystalEvent implements Serializable, CrystalInstant {
         return isAllDay;
     }
 
+    public boolean isBefore(CrystalInstant instant){
+        return getStartTime().before(instant.getStartTime());
+    }
+
     public void setStartNotificationIntent(Context context) {
         Intent notificationIntent = new Intent(context, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, NotificationPublisher.START);

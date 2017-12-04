@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Sathya on 11/26/2017. HI!
@@ -17,6 +18,7 @@ class CrystalData implements Serializable {
 
     private String userid;
     private CrystalCalendar mainCalendar = new CrystalCalendar();
+    // private ArrayList<CrystalCalendar> categories = new ArrayList<>();
     private CrystalData(String id) {userid = id;}
 
     void save(Context context){

@@ -30,5 +30,6 @@ interface CrystalInstant extends Serializable {
     Calendar getStartTime();
     String get(int field);
     Calendar getEndTime();
+    boolean isBefore(CrystalInstant instant);
 
 }

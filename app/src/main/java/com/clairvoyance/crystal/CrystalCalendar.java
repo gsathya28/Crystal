@@ -20,18 +20,34 @@ import java.util.Iterator;
 
 class CrystalCalendar implements Serializable{
 
+    private class Node{
+        int key;
+        Node next;
+        CrystalInstant instant;
+        // boolean isDivider = false;
+        // Calendar dividerDate;
+
+        private Node(int key, CrystalInstant instant, Node next){
+            this.key = key;
+            this.instant = instant;
+            this.next = next;
+        }
+    }
+
     /**
      * All the values this class holds
      */
     private ArrayList<ArrayList<CrystalInstant>> crystalEvents = new ArrayList<>();
     int eventCount = 0;
 
+    Node head;
+    Calendar present;
     /**
      * A constructor that only requires an id.
      *
      */
     CrystalCalendar() {
-
+        head = new Node(-1, null, null);
     }
 
     /**
@@ -39,8 +55,7 @@ class CrystalCalendar implements Serializable{
      *
      * @param event the event to be added
      */
-    void add(CrystalInstant event, Context context)
-    {
+    void add(CrystalInstant event, Context context) {
         event.setStartNotificationIntent(context);
         // Todo: Add based on start Date - for check
         eventCount++;
@@ -99,8 +114,7 @@ class CrystalCalendar implements Serializable{
      * @param event the event to be deleted
      * @return boolean regarding the success of the removal
      */
-    boolean remove(CrystalInstant event)
-    {
+    boolean remove(CrystalInstant event) {
         ArrayList<CrystalInstant> dateList = findDate(event);
         if (dateList != null) {
 
@@ -143,8 +157,7 @@ class CrystalCalendar implements Serializable{
      * @return <code>ArrayList</code> if there are events with same date as the event passed in, <code>null</code> if no events with the same date are found
      */
     @Nullable
-    private ArrayList<CrystalInstant> findDate(CrystalInstant event)
-    {
+    private ArrayList<CrystalInstant> findDate(CrystalInstant event) {
         Calendar startCalendar = event.getStartTime();
         Calendar strippedStartCalendar = (Calendar) startCalendar.clone();
         strippedStartCalendar.set(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DATE), 0, 0, 0);
@@ -166,7 +179,6 @@ class CrystalCalendar implements Serializable{
         return null;
     }
 
-
     /**
      *
      * @return the <code>ArrayList</code> of all the events sorted by date (in <code>ArrayLists</code>)
@@ -174,6 +186,28 @@ class CrystalCalendar implements Serializable{
     ArrayList<ArrayList<CrystalInstant>> getEvents()
     {
         return crystalEvents;
+    }
+
+    void add (CrystalInstant event){
+        if (head.next == null){
+            head.next = new Node(eventCount, event, null);
+            eventCount++;
+            return;
+        }
+        Node left = head;
+        Node right = head.next;
+        while (right != null){
+            if (event.isBefore(right.instant)){
+                left.next = new Node(eventCount, event, right);
+                eventCount++;
+                return;
+            }
+            left = left.next;
+            right = right.next;
+        }
+
+        throw new IllegalStateException("Illegal State of Stack");
+
     }
 
 }
